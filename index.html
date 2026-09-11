@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izanami Inspired - 和モダンコンセプト</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #050505;
+      --color-text: #e0e0e0;
+      --color-accent: #ffffff;
+      --font-en: 'Cinzel', serif;
+      --font-jp: 'Noto Serif JP', serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-jp);
+      font-weight: 300;
+      line-height: 1.8;
+      letter-spacing: 0.1em;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* カスタムカーソル */
+    .cursor, .cursor-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+    }
+    .cursor {
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-accent);
+      transition: transform 0.1s ease-out;
+    }
+    .cursor-follower {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      transition: transform 0.3s ease-out, background-color 0.3s ease;
+    }
+
+    a:hover ~ .cursor-follower,
+    .menu-btn:hover ~ .cursor-follower {
+      transform: translate(-50%, -50%) scale(1.5);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* ヘッダー */
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 30px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+    }
+
+    .logo {
+      font-family: var(--font-en);
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+    }
+
+    .menu-btn {
+      width: 30px;
+      height: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: none;
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-accent);
+    }
+
+    /* ヒーローセクション */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      animation: slowZoom 25s ease-out infinite alternate;
+    }
+
+    @keyframes slowZoom {
+      0% { transform: scale(1.05); }
+      100% { transform: scale(1.15); }
+    }
+
+    .hero-title {
+      font-size: 2.2rem;
+      font-weight: 400;
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-en);
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      opacity: 0.6;
+    }
+
+    /* セクション共通 */
+    .section-padding {
+      padding: 160px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: var(--font-en);
+      font-size: 2rem;
+      margin-bottom: 40px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+    }
+
+    .section-text {
+      font-size: 1rem;
+      line-height: 2.4;
+      color: #a0a0a0;
+    }
+
+    /* サービス一覧 */
+    .service-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 80px;
+    }
+
+    .service-item {
+      flex: 1;
+      min-width: 300px;
+      max-width: 360px;
+      text-align: left;
+    }
+
+    .service-img {
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .service-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .service-item:hover .service-img img {
+      transform: scale(1.04);
+    }
+
+    .service-title {
+      font-family: var(--font-en);
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .service-desc {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    /* アニメーション用クラス */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* フッター */
+    .footer {
+      padding: 80px 20px 40px;
+      text-align: center;
+      font-family: var(--font-en);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      opacity: 0.4;
+    }
+  </style>
+</head>
+<body>
+  <!-- カスタムカーソル -->
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="logo">IZANAMI INSPIRED</div>
+    <div class="menu-btn">
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <main>
+    <!-- ファーストビュー -->
+    <section class="hero">
+      <div class="hero-bg">
+        <img src="https://images.unsplash.com/photo-1542259145876-0c841e2eb9a4?q=100&w=3840&auto=format&fit=crop" alt="Hero Background">
+      </div>
+      <div class="hero-content fade-in-up">
+        <h1 class="hero-title">調和は創り出すものではなく、<br>思い出すもの。</h1>
+        <p class="hero-subtitle">Harmony is something to be remembered.</p>
+      </div>
+    </section>
+
+    <!-- コンセプトセクション -->
+    <section class="about section-padding">
+      <div class="container reveal">
+        <h2 class="section-title">Concept</h2>
+        <p class="section-text">
+          漆黒の余白に一行だけ置かれた詩的な美しさ。<br>
+          「和」の精神に導かれ、人生全体にわたる調和をデザインします。
+        </p>
+      </div>
+    </section>
+
+    <!-- サービス・カテゴリセクション -->
+    <section class="services section-padding">
+      <div class="container">
+        <div class="service-list">
+          <div class="service-item reveal">
+            <div class="service-img">
+              <img src="https://images.unsplash.com/photo-1611078813735-8669e4ceb5d8?q=100&w=1920&auto=format&fit=crop" alt="School">
+            </div>
+            <h3 class="service-title">School</h3>
+            <p class="service-desc">精神と知識の探求</p>
+          </div>
+          <div class="service-item reveal">
+            <div class="service-img">
+              <img src="https://images.unsplash.com/photo-1605333552086-fb1553c2999e?q=100&w=1920&auto=format&fit=crop" alt="Craft">
+            </div>
+            <h3 class="service-title">Craft</h3>
+            <p class="service-desc">形ある美の創造</p>
+          </div>
+          <div class="service-item reveal">
+            <div class="service-img">
+              <img src="https://images.unsplash.com/photo-1528310264104-5e135546949b?q=100&w=1920&auto=format&fit=crop" alt="Retreat">
+            </div>
+            <h3 class="service-title">Retreat</h3>
+            <p class="service-desc">心身の回帰</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer reveal">
+    <div class="container">
+      <p class="copyright">© 2026 Your Original Site</p>
+    </div>
+  </footer>
+
+  <script>
+    // カスタムカーソルの追従処理
+    const cursor = document.querySelector('.cursor');
+    const cursorFollower = document.querySelector('.cursor-follower');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      
+      // 外側のリングは少し遅れて追従させる
+      setTimeout(() => {
+        cursorFollower.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      }, 60);
+    });
+
+    // スクロール時のフェードイン処理（Intersection Observer API）
+    const reveals = document.querySelectorAll('.reveal');
+
+    const revealOptions = {
+      root: null,
+      rootMargin: '0px 0px -20% 0px',
+      threshold: 0
+    };
+
+    const revealCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
+
+    reveals.forEach(reveal => {
+      revealObserver.observe(reveal);
+    });
+  </script>
+</body>
+</html>
