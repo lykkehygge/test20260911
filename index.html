@@ -46,36 +46,20 @@
     .inline-text { width: auto !important; display: inline-block !important; padding: 4px 8px !important; margin-left: 8px; border-bottom: 1px solid var(--border) !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; background: transparent !important; }
     .inline-text:focus { box-shadow: none !important; border-bottom-color: var(--primary) !important; }
     
-    /* シェーマツールバーのスタイル */
     .canvas-toolbar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
     .tool-btn { padding: 8px 16px; font-size: 14px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; color: var(--text-main); transition: all 0.2s; font-weight: 500; display: flex; align-items: center; gap: 6px; }
     .tool-btn:hover { background: #f0f2f1; }
     .tool-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 6px rgba(107,140,116,0.2); }
     
-    /* ペンの色アイコン */
     .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
     .dot-red { background-color: #e74c3c; }
     .dot-blue { background-color: #3498db; }
     .dot-black { background-color: #333a35; }
     .dot-eraser { background-color: #fff; border: 1px solid #ccc; width: 10px; height: 10px; }
     
-    /* キャンバス（シェーマ） */
-    #canvas-container { 
-      border: 1px solid var(--border); 
-      border-radius: 16px; 
-      background-color: #fafbfc; 
-      /* ↓ご指定いただいた画像URLを背景に設定 */
-      background-image: url('https://lykkehygge.github.io/test20260911/body.png'); 
-      background-size: contain; 
-      background-repeat: no-repeat; 
-      background-position: center; 
-      touch-action: none; 
-      position: relative; 
-      overflow: hidden;
-    }
+    #canvas-container { border: 1px solid var(--border); border-radius: 16px; background-color: #fafbfc; background-image: url('https://lykkehygge.github.io/test20260911/body.png'); background-size: contain; background-repeat: no-repeat; background-position: center; touch-action: none; position: relative; overflow: hidden; }
     canvas { display: block; width: 100%; height: 400px; }
     
-    /* ボタン類 */
     .btn { padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; display: block; width: 100%; text-align: center; transition: all 0.3s ease; letter-spacing: 0.05em; }
     .btn-save-master { background-color: var(--text-main); color: white; margin-top: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .btn-save-master:hover { background-color: #1a1e1b; transform: translateY(-2px); }
@@ -86,17 +70,32 @@
     .btn-small { padding: 8px 16px; font-size: 14px; background: #f0f2f1; color: var(--text-light); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
     .btn-small:hover { background: #e2e8e4; color: var(--text-main); }
     
+    /* 履歴リストと添付ファイル */
     .record-list { display: flex; flex-direction: column; gap: 16px; }
     .record-item { background: #fafbfc; border: 1px solid var(--border); padding: 20px; border-radius: 12px; transition: box-shadow 0.2s; }
-    .record-date { display: inline-block; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700; margin-bottom: 12px; }
-    .record-content { font-size: 1em; margin-bottom: 12px; }
+    .record-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .record-date { display: inline-block; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700; }
     .record-price { color: var(--accent); font-size: 1.1em; font-weight: 700; text-align: right; }
+    .record-content { font-size: 1em; margin-bottom: 16px; }
     
+    /* 添付画像ギャラリー */
+    .record-attachments { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+    .attachment-thumb { width: 100px; height: 100px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); background: #eee; }
+    
+    /* 新規記録フォームのファイルアップロード */
     #new-record-form { display: none; background: #f7f9f8; padding: 24px; border-radius: 16px; margin-top: 24px; border: 1px solid var(--border); animation: slideDown 0.3s ease-out forwards; }
     #new-record-form.active { display: block; }
     
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .file-upload-wrapper { position: relative; width: 100%; }
+    .file-upload-input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .file-upload-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; border: 2px dashed var(--primary); border-radius: 12px; background: rgba(107, 140, 116, 0.05); color: var(--primary); font-weight: 500; text-align: center; transition: all 0.2s; }
+    .file-upload-wrapper:hover .file-upload-btn { background: rgba(107, 140, 116, 0.1); }
+    .file-upload-icon { font-size: 24px; margin-bottom: 8px; }
+    .file-preview-area { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
     
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 600px) { .card { padding: 24px 16px; } .form-row { flex-direction: column; gap: 0; } }
   </style>
 </head>
@@ -107,6 +106,7 @@
   <div class="card">
     <h1>顧客カルテ（基本情報）</h1>
     
+    <!-- 顧客情報部分は変更なしのため省略せずにそのまま表示 -->
     <div class="section-title">基本情報</div>
     <div class="form-row">
       <div class="form-group"><label>フリガナ</label><input type="text" id="furigana"></div>
@@ -125,7 +125,6 @@
       <div class="form-group"><label>メールアドレス</label><input type="email" id="email"></div>
     </div>
 
-    <!-- 中略: アンケート項目 (前回のコードと同じです。長くなるため省略せず残しています) -->
     <div class="section-title">ご来店について</div>
     <div class="form-group choice-group">
       <label style="display:block; width:100%;">ご来店のきっかけ</label>
@@ -159,38 +158,19 @@
       <label><input type="checkbox" name="tune" value="その他"> その他<input type="text" class="inline-text"></label>
     </div>
 
-    <!-- ==============================================
-         シェーマ（ツールバーとキャンバス）
-         ============================================== -->
     <div class="section-title">シェーマ（気になる場所に○）</div>
     <div class="form-group">
-      
-      <!-- ペン・消しゴム ツールバー -->
       <div class="canvas-toolbar">
-        <!-- 初期状態は赤ペンをアクティブにしています -->
-        <button type="button" class="tool-btn active" onclick="setTool('pen', '#e74c3c', this)">
-          <span class="color-dot dot-red"></span>赤ペン
-        </button>
-        <button type="button" class="tool-btn" onclick="setTool('pen', '#3498db', this)">
-          <span class="color-dot dot-blue"></span>青ペン
-        </button>
-        <button type="button" class="tool-btn" onclick="setTool('pen', '#333a35', this)">
-          <span class="color-dot dot-black"></span>黒ペン
-        </button>
-        <button type="button" class="tool-btn" onclick="setTool('eraser', null, this)">
-          <span class="color-dot dot-eraser"></span>消しゴム
-        </button>
-        
-        <!-- 全消去ボタンは右寄せ -->
+        <button type="button" class="tool-btn active" onclick="setTool('pen', '#e74c3c', this)"><span class="color-dot dot-red"></span>赤ペン</button>
+        <button type="button" class="tool-btn" onclick="setTool('pen', '#3498db', this)"><span class="color-dot dot-blue"></span>青ペン</button>
+        <button type="button" class="tool-btn" onclick="setTool('pen', '#333a35', this)"><span class="color-dot dot-black"></span>黒ペン</button>
+        <button type="button" class="tool-btn" onclick="setTool('eraser', null, this)"><span class="color-dot dot-eraser"></span>消しゴム</button>
         <button type="button" class="btn-small" onclick="clearCanvas()" style="margin-left: auto;">全消去</button>
       </div>
-
-      <!-- キャンバス -->
       <div id="canvas-container">
         <canvas id="signature-pad"></canvas>
       </div>
     </div>
-    <!-- ============================================== -->
 
     <div class="section-title">身体・健康状態について</div>
     <div class="form-group choice-group">
@@ -264,19 +244,42 @@
     <button class="btn btn-save-master" onclick="alert('顧客マスター情報を更新します')">基本情報を保存・更新する</button>
   </div>
 
+  <!-- ===============================
+       下部：お稽古記録（ファイル添付機能付き）
+       =============================== -->
   <div class="card">
     <h2>過去のお稽古記録</h2>
     
     <div class="record-list">
+      <!-- 過去の記録 1 (画像あり) -->
       <div class="record-item">
-        <div class="record-date">2026.09.20</div>
-        <div class="record-content">骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。自宅でのストレッチを指導。</div>
-        <div class="record-price">¥8,000</div>
+        <div class="record-header">
+          <div class="record-date">2026.09.20</div>
+          <div class="record-price">¥8,000</div>
+        </div>
+        <div class="record-content">骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。自宅でのストレッチを指導。<br>施術前後の姿勢を撮影しました。</div>
+        
+        <!-- 添付ファイル（ダミー画像） -->
+        <div class="record-attachments">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=150&q=80" alt="施術写真1" class="attachment-thumb">
+          <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=150&q=80" alt="施術写真2" class="attachment-thumb">
+        </div>
+      </div>
+
+      <!-- 過去の記録 2 (画像なし) -->
+      <div class="record-item">
+        <div class="record-header">
+          <div class="record-date">2026.08.15</div>
+          <div class="record-price">¥10,000</div>
+        </div>
+        <div class="record-content">初回カウンセリング。全体的な姿勢チェックと呼吸法の指導。</div>
       </div>
     </div>
 
+    <!-- 追加ボタン -->
     <button class="btn btn-add-record" onclick="toggleNewRecordForm()">＋ 本日のお稽古記録を追加</button>
 
+    <!-- 追加入力フォーム -->
     <div id="new-record-form">
       <div class="form-row">
         <div class="form-group">
@@ -292,6 +295,22 @@
         <label>お稽古内容</label>
         <textarea id="newContent" placeholder="本日の内容や気付いたことをご記入ください"></textarea>
       </div>
+
+      <!-- ファイル添付エリア -->
+      <div class="form-group">
+        <label>写真・動画の添付</label>
+        <div class="file-upload-wrapper">
+          <input type="file" class="file-upload-input" multiple accept="image/*,video/*" onchange="previewFiles(this)">
+          <div class="file-upload-btn">
+            <span class="file-upload-icon">📷</span>
+            <span>タップして写真・動画を追加</span>
+            <span style="font-size: 0.8em; font-weight: normal; margin-top: 4px;">（スマホの場合はカメラが起動します）</span>
+          </div>
+        </div>
+        <!-- 選択した画像のプレビュー表示エリア -->
+        <div class="file-preview-area" id="file-preview-container"></div>
+      </div>
+
       <button class="btn btn-save-master" style="background-color: var(--primary); margin-top: 10px;" onclick="saveLessonRecord()">記録を保存する</button>
     </div>
   </div>
@@ -299,44 +318,24 @@
 </div>
 
 <script>
+  // --- キャンバス処理 ---
   const canvas = document.getElementById('signature-pad');
   const ctx = canvas.getContext('2d');
   const container = document.getElementById('canvas-container');
   
-  function resizeCanvas() {
-    canvas.width = container.offsetWidth;
-    canvas.height = 400; // 少し縦長に調整
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+  function resizeCanvas() { canvas.width = container.offsetWidth; canvas.height = 400; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-  let isDrawing = false;
-  let currentColor = '#e74c3c'; // デフォルトは赤ペン
-  
-  // 初期設定
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = currentColor;
+  let isDrawing = false; let currentColor = '#e74c3c';
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = currentColor;
 
-  // ツール切り替え関数（ペン・消しゴム）
   function setTool(tool, color, btnElement) {
-    // ボタンのアクティブ状態を更新
-    const buttons = document.querySelectorAll('.tool-btn');
-    buttons.forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
-
     if (tool === 'eraser') {
-      // 消しゴムモード：描画されたものだけを透明にする（destination-out）
-      // ※背景画像はCSSでコンテナに設定しているため、キャンバス自体が透明になっても背景は消えません。
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.lineWidth = 20; // 消しゴムは太めに設定
+      ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 20;
     } else {
-      // ペンモード：通常描画（source-over）
-      ctx.globalCompositeOperation = 'source-over';
-      currentColor = color;
-      ctx.strokeStyle = currentColor;
-      ctx.lineWidth = 3; // ペンは細く
+      ctx.globalCompositeOperation = 'source-over'; currentColor = color; ctx.strokeStyle = currentColor; ctx.lineWidth = 3;
     }
   }
 
@@ -347,47 +346,60 @@
     return { x: clientX - rect.left, y: clientY - rect.top };
   }
 
-  function startPosition(e) { 
-    isDrawing = true; 
-    const pos = getPos(e); 
-    ctx.beginPath(); 
-    ctx.moveTo(pos.x, pos.y); 
-    e.preventDefault(); 
-  }
-  
-  function draw(e) { 
-    if (!isDrawing) return; 
-    const pos = getPos(e); 
-    ctx.lineTo(pos.x, pos.y); 
-    ctx.stroke(); 
-    e.preventDefault(); 
-  }
-  
+  function startPosition(e) { isDrawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
+  function draw(e) { if (!isDrawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); e.preventDefault(); }
   function endPosition() { isDrawing = false; }
 
-  canvas.addEventListener('mousedown', startPosition); 
-  canvas.addEventListener('mousemove', draw); 
-  canvas.addEventListener('mouseup', endPosition); 
-  canvas.addEventListener('mouseleave', endPosition);
-  canvas.addEventListener('touchstart', startPosition, {passive: false}); 
-  canvas.addEventListener('touchmove', draw, {passive: false}); 
+  canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mousemove', draw); 
+  canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mouseleave', endPosition);
+  canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); 
   canvas.addEventListener('touchend', endPosition);
 
-  // 全消去関数
-  function clearCanvas() { 
-    ctx.clearRect(0, 0, canvas.width, canvas.height); 
-  }
+  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-  // アコーディオン
+  // --- アコーディオン ---
   function toggleNewRecordForm() {
     const form = document.getElementById('new-record-form');
     form.classList.toggle('active');
     document.getElementById('newDate').valueAsDate = new Date();
   }
 
+  // --- ファイル添付プレビュー処理 ---
+  function previewFiles(input) {
+    const previewContainer = document.getElementById('file-preview-container');
+    previewContainer.innerHTML = ''; // プレビューをリセット
+
+    if (input.files && input.files.length > 0) {
+      Array.from(input.files).forEach(file => {
+        // 画像ファイルの場合のみプレビューを表示
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `<img src="${e.target.result}" alt="preview">`;
+            previewContainer.appendChild(div);
+          }
+          reader.readAsDataURL(file);
+        } else if (file.type.startsWith('video/')) {
+          // 動画の場合はアイコンやファイル名を表示
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.style.background = '#eef2ef';
+          div.style.display = 'flex';
+          div.style.alignItems = 'center';
+          div.style.justifyContent = 'center';
+          div.innerHTML = `<span style="font-size: 24px;">🎥</span>`;
+          previewContainer.appendChild(div);
+        }
+      });
+    }
+  }
+
   function saveLessonRecord() {
-    alert('新しいお稽古記録が保存されました。');
+    alert('新しいお稽古記録（添付ファイル含む）が保存されました。');
     document.getElementById('new-record-form').classList.remove('active');
+    document.getElementById('file-preview-container').innerHTML = ''; // 保存後にプレビューをクリア
   }
 </script>
 
