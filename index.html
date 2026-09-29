@@ -3,356 +3,184 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Izanami Inspired - 和モダンコンセプト</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>體調律研究所 電子カルテシステム</title>
   <style>
-    :root {
-      --color-bg: #050505;
-      --color-text: #e0e0e0;
-      --color-accent: #ffffff;
-      --font-en: 'Cinzel', serif;
-      --font-jp: 'Noto Serif JP', serif;
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 16px; background-color: #f4f6f8; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #5a7162; font-size: 20px; border-bottom: 2px solid #5a7162; padding-bottom: 10px; }
+    h2 { font-size: 16px; background-color: #eef2ef; padding: 8px; border-left: 4px solid #5a7162; margin-top: 24px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.9em; }
+    input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    textarea { height: 80px; resize: vertical; }
+    .checkbox-group label, .radio-group label { display: inline-block; margin-right: 12px; font-weight: normal; margin-bottom: 4px; }
+    
+    /* キャンバス（シェーマ）部分 */
+    #canvas-container {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      /* ↓ここに切り取った女性の身体図の画像URLを指定します */
+      background-image: url('https://via.placeholder.com/500x300.png?text=ここに身体図の画像をセットします');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      touch-action: none;
     }
-
-    body {
-      background-color: var(--color-bg);
-      color: var(--color-text);
-      font-family: var(--font-jp);
-      font-weight: 300;
-      line-height: 1.8;
-      letter-spacing: 0.1em;
-      overflow-x: hidden;
-      cursor: none;
-    }
-
-    /* カスタムカーソル */
-    .cursor, .cursor-follower {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 9999;
-    }
-    .cursor {
-      width: 6px;
-      height: 6px;
-      background-color: var(--color-accent);
-      transition: transform 0.1s ease-out;
-    }
-    .cursor-follower {
-      width: 36px;
-      height: 36px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      transition: transform 0.3s ease-out, background-color 0.3s ease;
-    }
-
-    a:hover ~ .cursor-follower,
-    .menu-btn:hover ~ .cursor-follower {
-      transform: translate(-50%, -50%) scale(1.5);
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* ヘッダー */
-    .header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 30px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-      mix-blend-mode: difference;
-    }
-
-    .logo {
-      font-family: var(--font-en);
-      font-size: 1.2rem;
-      letter-spacing: 0.2em;
-    }
-
-    .menu-btn {
-      width: 30px;
-      height: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: none;
-    }
-
-    .menu-btn span {
-      display: block;
-      width: 100%;
-      height: 1px;
-      background-color: var(--color-accent);
-    }
-
-    /* ヒーローセクション */
-    .hero {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-
-    .hero-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.3;
-      animation: slowZoom 25s ease-out infinite alternate;
-    }
-
-    @keyframes slowZoom {
-      0% { transform: scale(1.05); }
-      100% { transform: scale(1.15); }
-    }
-
-    .hero-title {
-      font-size: 2.2rem;
-      font-weight: 400;
-      margin-bottom: 24px;
-      line-height: 1.7;
-    }
-
-    .hero-subtitle {
-      font-family: var(--font-en);
-      font-size: 0.9rem;
-      letter-spacing: 0.15em;
-      opacity: 0.6;
-    }
-
-    /* セクション共通 */
-    .section-padding {
-      padding: 160px 20px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .section-title {
-      font-family: var(--font-en);
-      font-size: 2rem;
-      margin-bottom: 40px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-    }
-
-    .section-text {
-      font-size: 1rem;
-      line-height: 2.4;
-      color: #a0a0a0;
-    }
-
-    /* サービス一覧 */
-    .service-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 40px;
-      justify-content: center;
-      margin-top: 80px;
-    }
-
-    .service-item {
-      flex: 1;
-      min-width: 300px;
-      max-width: 360px;
-      text-align: left;
-    }
-
-    .service-img {
-      width: 100%;
-      height: 480px;
-      overflow: hidden;
-      margin-bottom: 24px;
-    }
-
-    .service-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .service-item:hover .service-img img {
-      transform: scale(1.04);
-    }
-
-    .service-title {
-      font-family: var(--font-en);
-      font-size: 1.5rem;
-      margin-bottom: 12px;
-      font-weight: 400;
-    }
-
-    .service-desc {
-      font-size: 0.9rem;
-      color: #888;
-    }
-
-    /* アニメーション用クラス */
-    .fade-in-up {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-      animation-delay: 0.6s;
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 1.2s ease, transform 1.2s ease;
-    }
-
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* フッター */
-    .footer {
-      padding: 80px 20px 40px;
-      text-align: center;
-      font-family: var(--font-en);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      opacity: 0.4;
-    }
+    canvas { display: block; width: 100%; height: 300px; }
+    
+    .button-group { display: flex; gap: 10px; margin-top: 24px; }
+    button { flex: 1; padding: 14px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
+    .btn-clear { background-color: #e0e0e0; color: #333; }
+    .btn-save { background-color: #5a7162; color: white; }
   </style>
 </head>
 <body>
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
 
-  <header class="header">
-    <div class="logo">IZANAMI INSPIRED</div>
-    <div class="menu-btn">
-      <span></span>
-      <span></span>
+<div class="container">
+  <h1>體調律研究所 電子カルテ</h1>
+  
+  <!-- お稽古記録セクション -->
+  <h2>本日のお稽古記録</h2>
+  <div class="form-group">
+    <label>月日</label>
+    <input type="date" id="lessonDate">
+  </div>
+  <div class="form-group">
+    <label>お稽古内容</label>
+    <textarea id="lessonContent" placeholder="本日の内容をご記入ください"></textarea>
+  </div>
+  <div class="form-group">
+    <label>お会計 (¥)</label>
+    <input type="number" id="price" placeholder="例: 5000">
+  </div>
+
+  <!-- シェーマ（図への書き込み）セクション -->
+  <h2>気になる場所に○をつけてください</h2>
+  <div class="form-group">
+    <div id="canvas-container">
+      <canvas id="signature-pad"></canvas>
     </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-bg">
-        <img src="https://images.unsplash.com/photo-1542259145876-0c841e2eb9a4?q=100&w=3840&auto=format&fit=crop" alt="Hero Background">
-      </div>
-      <div class="hero-content fade-in-up">
-        <h1 class="hero-title">調和は創り出すものではなく、<br>思い出すもの。</h1>
-        <p class="hero-subtitle">Harmony is something to be remembered.</p>
-      </div>
-    </section>
-
-    <section class="about section-padding">
-      <div class="container reveal">
-        <h2 class="section-title">Concept</h2>
-        <p class="section-text">
-          漆黒の余白に一行だけ置かれた詩的な美しさ。<br>
-          「和」の精神に導かれ、人生全体にわたる調和をデザインします。
-        </p>
-      </div>
-    </section>
-
-    <section class="services section-padding">
-      <div class="container">
-        <div class="service-list">
-          <div class="service-item reveal">
-            <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1611078813735-8669e4ceb5d8?q=100&w=3840&auto=format&fit=crop" alt="School">
-            </div>
-            <h3 class="service-title">School</h3>
-            <p class="service-desc">精神と知識の探求</p>
-          </div>
-          <div class="service-item reveal">
-            <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1605333552086-fb1553c2999e?q=100&w=3840&auto=format&fit=crop" alt="Craft">
-            </div>
-            <h3 class="service-title">Craft</h3>
-            <p class="service-desc">形ある美の創造</p>
-          </div>
-          <div class="service-item reveal">
-            <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1528310264104-5e135546949b?q=100&w=3840&auto=format&fit=crop" alt="Retreat">
-            </div>
-            <h3 class="service-title">Retreat</h3>
-            <p class="service-desc">心身の回帰</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer reveal">
-    <div class="container">
-      <p class="copyright">© 2026 Your Original Site</p>
+    <div style="text-align: right; margin-top: 5px;">
+      <button type="button" class="btn-clear" onclick="clearCanvas()" style="padding: 6px 12px; font-size: 14px; flex: none;">クリア</button>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    const cursor = document.querySelector('.cursor');
-    const cursorFollower = document.querySelector('.cursor-follower');
+  <!-- お客様情報セクション -->
+  <h2>お客様情報 (カウンセリングシート)</h2>
+  <div class="form-group"><label>氏名</label><input type="text" id="name"></div>
+  <div class="form-group"><label>フリガナ</label><input type="text" id="furigana"></div>
+  <div style="display: flex; gap: 10px;">
+    <div class="form-group" style="flex: 1;"><label>生年月日</label><input type="date" id="dob"></div>
+    <div class="form-group" style="flex: 1;"><label>ご職業</label><input type="text" id="job"></div>
+  </div>
+  <div class="form-group"><label>ご住所</label><input type="text" id="address"></div>
+  <div class="form-group"><label>電話番号</label><input type="tel" id="phone"></div>
+  
+  <!-- カウンセリングアンケート -->
+  <div class="form-group">
+    <label>ご来店のきっかけ</label>
+    <div class="radio-group">
+      <label><input type="radio" name="source" value="当店のホームページ"> HP</label>
+      <label><input type="radio" name="source" value="知人の紹介"> 知人の紹介</label>
+      <label><input type="radio" name="source" value="看板やチラシ"> 看板・チラシ</label>
+      <label><input type="radio" name="source" value="SNSの投稿"> SNS</label>
+      <label><input type="radio" name="source" value="その他"> その他</label>
+    </div>
+  </div>
 
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      setTimeout(() => {
-        cursorFollower.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      }, 60);
-    });
+  <div class="form-group">
+    <label>本日のご来店目的（複数可）</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="purpose" value="姿勢改善"> 姿勢改善</label>
+      <label><input type="checkbox" name="purpose" value="不調改善"> 不調改善</label>
+      <label><input type="checkbox" name="purpose" value="痛み改善"> 痛み改善</label>
+      <label><input type="checkbox" name="purpose" value="パフォーマンス向上"> パフォーマンス向上</label>
+    </div>
+  </div>
 
-    const reveals = document.querySelectorAll('.reveal');
+  <div class="form-group">
+    <label>整えたいことは何ですか？</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="tune" value="お肉の状態"> お肉の状態</label>
+      <label><input type="checkbox" name="tune" value="疲れないカラダ"> 疲れないカラダ</label>
+      <label><input type="checkbox" name="tune" value="内臓の健康"> 内臓の健康</label>
+      <label><input type="checkbox" name="tune" value="自律神経"> 自律神経</label>
+      <label><input type="checkbox" name="tune" value="ホルモンバランス"> ホルモンバランス</label>
+      <label><input type="checkbox" name="tune" value="痛みのないカラダ"> 痛みのないカラダ</label>
+      <label><input type="checkbox" name="tune" value="睡眠の状態"> 睡眠の状態</label>
+      <label><input type="checkbox" name="tune" value="力みグセ"> 力みグセ</label>
+      <label><input type="checkbox" name="tune" value="無理のない動き"> 無理のない動き</label>
+    </div>
+  </div>
 
-    const revealOptions = {
-      root: null,
-      rootMargin: '0px 0px -20% 0px',
-      threshold: 0
+  <div class="button-group">
+    <button class="btn-save" onclick="saveData()">この内容でカルテを保存する</button>
+  </div>
+</div>
+
+<script>
+  // キャンバスの処理（以前と同じで、赤ペンに設定しています）
+  const canvas = document.getElementById('signature-pad');
+  const ctx = canvas.getContext('2d');
+  const container = document.getElementById('canvas-container');
+  
+  function resizeCanvas() {
+    canvas.width = container.offsetWidth;
+    canvas.height = 300;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  let isDrawing = false;
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#e74c3c'; // 赤色（目立たせるため）
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function startPosition(e) { isDrawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
+  function draw(e) { if (!isDrawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); e.preventDefault(); }
+  function endPosition() { isDrawing = false; }
+
+  canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mouseleave', endPosition);
+  canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', endPosition);
+
+  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+  // データの収集と保存処理
+  function saveData() {
+    // チェックボックスの値を取得
+    const purposes = Array.from(document.querySelectorAll('input[name="purpose"]:checked')).map(el => el.value).join(', ');
+    const tunes = Array.from(document.querySelectorAll('input[name="tune"]:checked')).map(el => el.value).join(', ');
+    const source = document.querySelector('input[name="source"]:checked') ? document.querySelector('input[name="source"]:checked').value : '';
+
+    const data = {
+      lessonDate: document.getElementById('lessonDate').value,
+      lessonContent: document.getElementById('lessonContent').value,
+      price: document.getElementById('price').value,
+      name: document.getElementById('name').value,
+      furigana: document.getElementById('furigana').value,
+      dob: document.getElementById('dob').value,
+      job: document.getElementById('job').value,
+      address: document.getElementById('address').value,
+      phone: document.getElementById('phone').value,
+      source: source,
+      purposes: purposes,
+      tunes: tunes,
+      image: canvas.toDataURL('image/png')
     };
 
-    const revealCallback = (entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
-      });
-    };
+    alert('保存処理を実行します...\n(GASへの送信処理がここに繋がります)');
+    // 実際にはここで google.script.run.saveRecord(data); を呼び出します
+  }
+</script>
 
-    const revealObserver = new IntersectionObserver(revealCallback, revealOptions);
-
-    reveals.forEach(reveal => {
-      revealObserver.observe(reveal);
-    });
-  </script>
 </body>
 </html>
