@@ -3,405 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>體調律研究所 - 電子カルテ</title>
+  <title>體調律研究所 - 管理ダッシュボード</title>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
-  
   <style>
     :root {
-      --primary: #6b8c74;
-      --primary-hover: #56735e;
-      --bg-color: #f5f7f5;
-      --card-bg: #ffffff;
-      --text-main: #333a35;
-      --text-light: #7b857e;
-      --border: #dce3df;
-      --accent: #d4a373;
+      --primary: #6b8c74; --primary-hover: #56735e; --bg-color: #f5f7f5;
+      --card-bg: #ffffff; --text-main: #333a35; --text-light: #7b857e;
+      --border: #dce3df; --accent: #d4a373;
     }
-
     body { font-family: 'Zen Kaku Gothic New', sans-serif; padding: 24px 16px; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; margin: 0; }
-    .container { max-width: 800px; margin: 0 auto; }
+    .container { max-width: 900px; margin: 0 auto; }
     
-    .card { background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 8px 30px rgba(107, 140, 116, 0.08); margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.5); }
-    .card h1 { font-size: 24px; color: var(--primary); text-align: center; margin: 0 0 32px 0; font-weight: 700; letter-spacing: 0.05em; }
-    .card h2 { font-size: 20px; color: var(--text-main); margin: 0 0 24px 0; display: flex; align-items: center; }
-    .card h2::before { content: ''; display: inline-block; width: 4px; height: 20px; background: var(--primary); border-radius: 2px; margin-right: 12px; }
+    h1 { font-size: 24px; color: var(--primary); text-align: center; margin-bottom: 32px; font-weight: 700; letter-spacing: 0.05em; }
+    .card { background: var(--card-bg); padding: 32px; border-radius: 20px; box-shadow: 0 8px 30px rgba(107, 140, 116, 0.08); margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.5); }
+    .card-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; }
+    .card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; margin-right: 12px; }
+
+    /* ダッシュボード（売上・利用数） */
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .stat-box { background: #fafbfc; border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
+    .stat-title { font-size: 0.9em; color: var(--text-light); font-weight: 500; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 700; color: var(--primary); }
+    .stat-value.accent { color: var(--accent); }
+    .date-filter { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+    input[type="date"], input[type="text"] { padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--text-main); }
     
-    .section-title { font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #ebf0ee; padding-bottom: 8px; margin: 40px 0 20px 0; font-weight: 700; letter-spacing: 0.05em; }
+    /* 検索バー */
+    .search-wrapper { display: flex; gap: 12px; }
+    .search-input { flex: 1; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 16px; transition: 0.3s; }
+    .search-input:focus { border-color: var(--primary); outline: none; }
     
-    .form-group { margin-bottom: 20px; }
-    .form-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-    .form-row .form-group { flex: 1; min-width: 200px; margin-bottom: 0; }
-    
-    label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.95em; color: var(--text-light); }
-    input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea { 
-      width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; font-size: 16px; background-color: #fbfcfb; transition: all 0.3s ease; font-family: inherit; color: var(--text-main);
-    }
-    input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(107, 140, 116, 0.15); }
-    textarea { height: 100px; resize: vertical; }
-    
-    .choice-group label { display: inline-flex; align-items: center; margin-right: 20px; margin-bottom: 12px; cursor: pointer; font-weight: 400; color: var(--text-main); padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
-    .choice-group label:hover { background: rgba(107, 140, 116, 0.05); }
-    input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; margin-right: 8px; accent-color: var(--primary); cursor: pointer; }
-    
-    .inline-text { width: auto !important; display: inline-block !important; padding: 4px 8px !important; margin-left: 8px; border-bottom: 1px solid var(--border) !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; background: transparent !important; }
-    .inline-text:focus { box-shadow: none !important; border-bottom-color: var(--primary) !important; }
-    
-    .canvas-toolbar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
-    .tool-btn { padding: 8px 16px; font-size: 14px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; color: var(--text-main); transition: all 0.2s; font-weight: 500; display: flex; align-items: center; gap: 6px; }
-    .tool-btn:hover { background: #f0f2f1; }
-    .tool-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 6px rgba(107,140,116,0.2); }
-    
-    .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
-    .dot-red { background-color: #e74c3c; }
-    .dot-blue { background-color: #3498db; }
-    .dot-black { background-color: #333a35; }
-    .dot-eraser { background-color: #fff; border: 1px solid #ccc; width: 10px; height: 10px; }
-    
-    #canvas-container { border: 1px solid var(--border); border-radius: 16px; background-color: #fafbfc; background-image: url('https://lykkehygge.github.io/test20260911/body.png'); background-size: contain; background-repeat: no-repeat; background-position: center; touch-action: none; position: relative; overflow: hidden; }
-    canvas { display: block; width: 100%; height: 400px; }
-    
-    .btn { padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; display: block; width: 100%; text-align: center; transition: all 0.3s ease; letter-spacing: 0.05em; }
-    .btn-save-master { background-color: var(--text-main); color: white; margin-top: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    .btn-save-master:hover { background-color: #1a1e1b; transform: translateY(-2px); }
-    
-    .btn-add-record { background-color: var(--primary); color: white; margin-top: 24px; box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2); }
-    .btn-add-record:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
-    
-    .btn-small { padding: 8px 16px; font-size: 14px; background: #f0f2f1; color: var(--text-light); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
-    .btn-small:hover { background: #e2e8e4; color: var(--text-main); }
-    
-    /* 履歴リストと添付ファイル */
-    .record-list { display: flex; flex-direction: column; gap: 16px; }
-    .record-item { background: #fafbfc; border: 1px solid var(--border); padding: 20px; border-radius: 12px; transition: box-shadow 0.2s; }
-    .record-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .record-date { display: inline-block; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700; }
-    .record-price { color: var(--accent); font-size: 1.1em; font-weight: 700; text-align: right; }
-    .record-content { font-size: 1em; margin-bottom: 16px; }
-    
-    /* 添付画像ギャラリー */
-    .record-attachments { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
-    .attachment-thumb { width: 100px; height: 100px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); background: #eee; }
-    
-    /* 新規記録フォームのファイルアップロード */
-    #new-record-form { display: none; background: #f7f9f8; padding: 24px; border-radius: 16px; margin-top: 24px; border: 1px solid var(--border); animation: slideDown 0.3s ease-out forwards; }
-    #new-record-form.active { display: block; }
-    
-    .file-upload-wrapper { position: relative; width: 100%; }
-    .file-upload-input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-    .file-upload-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; border: 2px dashed var(--primary); border-radius: 12px; background: rgba(107, 140, 116, 0.05); color: var(--primary); font-weight: 500; text-align: center; transition: all 0.2s; }
-    .file-upload-wrapper:hover .file-upload-btn { background: rgba(107, 140, 116, 0.1); }
-    .file-upload-icon { font-size: 24px; margin-bottom: 8px; }
-    .file-preview-area { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
-    
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 600px) { .card { padding: 24px 16px; } .form-row { flex-direction: column; gap: 0; } }
+    /* アクションボタン（新規登録・プラン） */
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn { padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; text-align: center; transition: 0.3s; }
+    .btn-primary { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2); }
+    .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+    .btn-secondary { background-color: var(--text-main); color: white; }
+    .btn-secondary:hover { background-color: #1a1e1b; transform: translateY(-2px); }
+
+    @media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } .search-wrapper { flex-direction: column; } }
   </style>
 </head>
 <body>
 
 <div class="container">
-  
+  <h1>體調律研究所システム</h1>
+
+  <!-- 売上・利用数ダッシュボード -->
   <div class="card">
-    <h1>顧客カルテ（基本情報）</h1>
-    
-    <!-- 顧客情報部分は変更なしのため省略せずにそのまま表示 -->
-    <div class="section-title">基本情報</div>
-    <div class="form-row">
-      <div class="form-group"><label>フリガナ</label><input type="text" id="furigana"></div>
-      <div class="form-group"><label>生年月日</label><input type="date" id="dob"></div>
+    <div class="card-title">利用数・売上レポート</div>
+    <div class="date-filter">
+      <input type="date" value="2026-09-01"> 〜 <input type="date" value="2026-09-30">
+      <button class="btn btn-secondary" style="padding: 10px 16px; font-size: 14px;">集計する</button>
     </div>
-    <div class="form-row">
-      <div class="form-group"><label>氏名</label><input type="text" id="name" value="山田 花子"></div>
-      <div class="form-group"><label>ご職業</label><input type="text" id="job"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group" style="flex: 0.4;"><label>〒</label><input type="text" id="zip"></div>
-      <div class="form-group" style="flex: 1.6;"><label>住所</label><input type="text" id="address"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>電話番号</label><input type="tel" id="phone"></div>
-      <div class="form-group"><label>メールアドレス</label><input type="email" id="email"></div>
-    </div>
-
-    <div class="section-title">ご来店について</div>
-    <div class="form-group choice-group">
-      <label style="display:block; width:100%;">ご来店のきっかけ</label>
-      <label><input type="radio" name="source" value="当店のホームページ"> 当店のホームページ</label>
-      <label><input type="radio" name="source" value="知人の紹介"> 知人の紹介</label>
-      <label><input type="radio" name="source" value="看板やチラシ"> 看板やチラシ</label>
-      <label><input type="radio" name="source" value="SNSの投稿"> SNSの投稿</label>
-      <label><input type="radio" name="source" value="その他"> その他<input type="text" class="inline-text"></label>
-    </div>
-
-    <div class="form-group choice-group">
-      <label style="display:block; width:100%;">本日のご来店目的 (複数選択可)</label>
-      <label><input type="checkbox" name="purpose" value="姿勢改善"> 姿勢改善</label>
-      <label><input type="checkbox" name="purpose" value="不調改善"> 不調改善</label>
-      <label><input type="checkbox" name="purpose" value="痛み改善"> 痛み改善</label>
-      <label><input type="checkbox" name="purpose" value="パフォーマンス向上"> パフォーマンス向上</label>
-      <label><input type="checkbox" name="purpose" value="その他"> その他<input type="text" class="inline-text"></label>
-    </div>
-
-    <div class="form-group choice-group">
-      <label style="display:block; width:100%;">整えたいことは何ですか?</label>
-      <label><input type="checkbox" name="tune" value="お肉の状態"> お肉の状態</label>
-      <label><input type="checkbox" name="tune" value="疲れないカラダ"> 疲れないカラダ</label>
-      <label><input type="checkbox" name="tune" value="内臓の健康"> 内臓の健康</label>
-      <label><input type="checkbox" name="tune" value="自律神経"> 自律神経</label>
-      <label><input type="checkbox" name="tune" value="ホルモンバランス"> ホルモンバランス</label>
-      <label><input type="checkbox" name="tune" value="痛みのないカラダ"> 痛みのないカラダ</label>
-      <label><input type="checkbox" name="tune" value="睡眠の状態"> 睡眠の状態</label>
-      <label><input type="checkbox" name="tune" value="力みグセ"> 力みグセ</label>
-      <label><input type="checkbox" name="tune" value="無理のない動き"> 無理のない動き</label>
-      <label><input type="checkbox" name="tune" value="その他"> その他<input type="text" class="inline-text"></label>
-    </div>
-
-    <div class="section-title">シェーマ（気になる場所に○）</div>
-    <div class="form-group">
-      <div class="canvas-toolbar">
-        <button type="button" class="tool-btn active" onclick="setTool('pen', '#e74c3c', this)"><span class="color-dot dot-red"></span>赤ペン</button>
-        <button type="button" class="tool-btn" onclick="setTool('pen', '#3498db', this)"><span class="color-dot dot-blue"></span>青ペン</button>
-        <button type="button" class="tool-btn" onclick="setTool('pen', '#333a35', this)"><span class="color-dot dot-black"></span>黒ペン</button>
-        <button type="button" class="tool-btn" onclick="setTool('eraser', null, this)"><span class="color-dot dot-eraser"></span>消しゴム</button>
-        <button type="button" class="btn-small" onclick="clearCanvas()" style="margin-left: auto;">全消去</button>
+    <div class="dashboard-grid">
+      <div class="stat-box">
+        <div class="stat-title">指定期間の来店数</div>
+        <div class="stat-value">42 <span style="font-size: 14px; color: var(--text-light);">名</span></div>
       </div>
-      <div id="canvas-container">
-        <canvas id="signature-pad"></canvas>
+      <div class="stat-box">
+        <div class="stat-title">指定期間の新規登録</div>
+        <div class="stat-value">5 <span style="font-size: 14px; color: var(--text-light);">名</span></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-title">指定期間の売上合計</div>
+        <div class="stat-value accent">¥345,000</div>
       </div>
     </div>
-
-    <div class="section-title">身体・健康状態について</div>
-    <div class="form-group choice-group">
-      <label style="display:block; width:100%;">カラダのためにしている運動はありますか?</label>
-      <label><input type="radio" name="exercise" value="していない"> していない</label>
-      <label><input type="radio" name="exercise" value="している"> している(種目頻度: <input type="text" class="inline-text" style="width: 150px !important;">)</label>
-    </div>
-    
-    <div class="form-group choice-group">
-      <label style="display:block; width:100%;">現在治療中のご病気、過去になった病気</label>
-      <label><input type="radio" name="disease" value="なし"> なし</label>
-      <label><input type="radio" name="disease" value="あり"> あり(病名: <input type="text" class="inline-text" style="width: 150px !important;">)</label>
-      <div style="margin-top: 12px; font-size: 0.95em; color: var(--text-light); font-weight: 500;">
-        お薬: <input type="text" class="inline-text" style="width: calc(100% - 60px) !important;">
-      </div>
-    </div>
-
-    <div class="form-group choice-group" style="background: #f9faf9; padding: 16px; border-radius: 12px;">
-      <label style="display:block; width:100%;">動きの変化を動画で残していっていいですか?</label>
-      <span style="font-size: 0.85em; color: var(--text-light); display: block; margin-bottom: 12px; line-height: 1.4;">
-        ※體調律研究所では、動きの美しさを大切にしています。<br>ご自身の変化が誰かの背中を押すきっかけになるので、美しく撮れた時には掲載にご協力いただけたら嬉しいです。
-      </span>
-      <label><input type="radio" name="video_consent" value="はい"> はい</label>
-      <label><input type="radio" name="video_consent" value="いいえ"> いいえ</label>
-    </div>
-
-    <div class="section-title">女性特有の項目 <span style="font-size: 0.8em; font-weight: normal; color: var(--text-light);">(差し支えがなければお答えください)</span></div>
-    <div class="form-row">
-      <div class="form-group choice-group">
-        <label style="display:block; width:100%;">生理について</label>
-        <label><input type="radio" name="period" value="順調"> 順調</label>
-        <label><input type="radio" name="period" value="不順"> 不順</label>
-        <label><input type="radio" name="period" value="閉経"> 閉経</label>
-      </div>
-      <div class="form-group choice-group">
-        <label style="display:block; width:100%;">生理痛について</label>
-        <label><input type="radio" name="period_pain" value="きつい"> きつい</label>
-        <label><input type="radio" name="period_pain" value="ふつう"> ふつう</label>
-        <label><input type="radio" name="period_pain" value="ない"> ない</label>
-      </div>
-    </div>
-    
-    <div class="form-row">
-      <div class="form-group choice-group">
-        <label style="display:block; width:100%;">出産経験</label>
-        <label><input type="radio" name="childbirth" value="ある"> ある</label>
-        <label><input type="radio" name="childbirth" value="ない"> ない</label>
-      </div>
-      <div class="form-group choice-group">
-        <label style="display:block; width:100%;">現在妊娠していますか?</label>
-        <label><input type="radio" name="pregnancy" value="はい"> はい</label>
-        <label><input type="radio" name="pregnancy" value="いいえ"> いいえ</label>
-      </div>
-    </div>
-    
-    <div class="form-group" style="display: flex; align-items: center; gap: 12px;">
-      <label style="margin: 0;">妊娠されている方、妊娠何ヶ月ですか?</label>
-      <div><input type="number" style="width: 80px; text-align: right;" min="0" max="10"> ヶ月</div>
-    </div>
-
-    <div class="section-title">理想について</div>
-    <div class="form-group">
-      <label>どんなスタイルが好きですか?</label>
-      <textarea placeholder="自由にご記入ください"></textarea>
-    </div>
-    <div class="form-group">
-      <label>どんな顔が好きですか? どんな女優さんを綺麗と感じますか?</label>
-      <textarea placeholder="自由にご記入ください"></textarea>
-    </div>
-    
-    <button class="btn btn-save-master" onclick="alert('顧客マスター情報を更新します')">基本情報を保存・更新する</button>
   </div>
 
-  <!-- ===============================
-       下部：お稽古記録（ファイル添付機能付き）
-       =============================== -->
+  <!-- 患者検索 -->
   <div class="card">
-    <h2>過去のお稽古記録</h2>
-    
-    <div class="record-list">
-      <!-- 過去の記録 1 (画像あり) -->
-      <div class="record-item">
-        <div class="record-header">
-          <div class="record-date">2026.09.20</div>
-          <div class="record-price">¥8,000</div>
-        </div>
-        <div class="record-content">骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。自宅でのストレッチを指導。<br>施術前後の姿勢を撮影しました。</div>
-        
-        <!-- 添付ファイル（ダミー画像） -->
-        <div class="record-attachments">
-          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=150&q=80" alt="施術写真1" class="attachment-thumb">
-          <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=150&q=80" alt="施術写真2" class="attachment-thumb">
-        </div>
-      </div>
-
-      <!-- 過去の記録 2 (画像なし) -->
-      <div class="record-item">
-        <div class="record-header">
-          <div class="record-date">2026.08.15</div>
-          <div class="record-price">¥10,000</div>
-        </div>
-        <div class="record-content">初回カウンセリング。全体的な姿勢チェックと呼吸法の指導。</div>
-      </div>
+    <div class="card-title">お客様検索</div>
+    <div class="search-wrapper">
+      <input type="text" class="search-input" placeholder="名前・フリガナ・電話番号で検索...">
+      <button class="btn btn-primary" style="white-space: nowrap; margin: 0;" onclick="alert('検索結果一覧画面へ遷移します')">検索する</button>
     </div>
+  </div>
 
-    <!-- 追加ボタン -->
-    <button class="btn btn-add-record" onclick="toggleNewRecordForm()">＋ 本日のお稽古記録を追加</button>
-
-    <!-- 追加入力フォーム -->
-    <div id="new-record-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label>月日</label>
-          <input type="date" id="newDate">
-        </div>
-        <div class="form-group">
-          <label>お会計 (¥)</label>
-          <input type="number" id="newPrice" placeholder="例: 5000">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>お稽古内容</label>
-        <textarea id="newContent" placeholder="本日の内容や気付いたことをご記入ください"></textarea>
-      </div>
-
-      <!-- ファイル添付エリア -->
-      <div class="form-group">
-        <label>写真・動画の添付</label>
-        <div class="file-upload-wrapper">
-          <input type="file" class="file-upload-input" multiple accept="image/*,video/*" onchange="previewFiles(this)">
-          <div class="file-upload-btn">
-            <span class="file-upload-icon">📷</span>
-            <span>タップして写真・動画を追加</span>
-            <span style="font-size: 0.8em; font-weight: normal; margin-top: 4px;">（スマホの場合はカメラが起動します）</span>
-          </div>
-        </div>
-        <!-- 選択した画像のプレビュー表示エリア -->
-        <div class="file-preview-area" id="file-preview-container"></div>
-      </div>
-
-      <button class="btn btn-save-master" style="background-color: var(--primary); margin-top: 10px;" onclick="saveLessonRecord()">記録を保存する</button>
-    </div>
+  <!-- クイックアクション -->
+  <div class="action-grid">
+    <button class="btn btn-primary" onclick="alert('新規登録画面（空のカルテ画面）へ遷移します')">
+      ＋ 新規お客様登録
+    </button>
+    <button class="btn btn-secondary" onclick="alert('プラン一覧・料金設定の管理画面へ遷移します')">
+      📋 プラン説明・管理
+    </button>
   </div>
 
 </div>
-
-<script>
-  // --- キャンバス処理 ---
-  const canvas = document.getElementById('signature-pad');
-  const ctx = canvas.getContext('2d');
-  const container = document.getElementById('canvas-container');
-  
-  function resizeCanvas() { canvas.width = container.offsetWidth; canvas.height = 400; }
-  window.addEventListener('resize', resizeCanvas); resizeCanvas();
-
-  let isDrawing = false; let currentColor = '#e74c3c';
-  ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = currentColor;
-
-  function setTool(tool, color, btnElement) {
-    document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-    if (tool === 'eraser') {
-      ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 20;
-    } else {
-      ctx.globalCompositeOperation = 'source-over'; currentColor = color; ctx.strokeStyle = currentColor; ctx.lineWidth = 3;
-    }
-  }
-
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  }
-
-  function startPosition(e) { isDrawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
-  function draw(e) { if (!isDrawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); e.preventDefault(); }
-  function endPosition() { isDrawing = false; }
-
-  canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mousemove', draw); 
-  canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mouseleave', endPosition);
-  canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); 
-  canvas.addEventListener('touchend', endPosition);
-
-  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-  // --- アコーディオン ---
-  function toggleNewRecordForm() {
-    const form = document.getElementById('new-record-form');
-    form.classList.toggle('active');
-    document.getElementById('newDate').valueAsDate = new Date();
-  }
-
-  // --- ファイル添付プレビュー処理 ---
-  function previewFiles(input) {
-    const previewContainer = document.getElementById('file-preview-container');
-    previewContainer.innerHTML = ''; // プレビューをリセット
-
-    if (input.files && input.files.length > 0) {
-      Array.from(input.files).forEach(file => {
-        // 画像ファイルの場合のみプレビューを表示
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `<img src="${e.target.result}" alt="preview">`;
-            previewContainer.appendChild(div);
-          }
-          reader.readAsDataURL(file);
-        } else if (file.type.startsWith('video/')) {
-          // 動画の場合はアイコンやファイル名を表示
-          const div = document.createElement('div');
-          div.className = 'preview-item';
-          div.style.background = '#eef2ef';
-          div.style.display = 'flex';
-          div.style.alignItems = 'center';
-          div.style.justifyContent = 'center';
-          div.innerHTML = `<span style="font-size: 24px;">🎥</span>`;
-          previewContainer.appendChild(div);
-        }
-      });
-    }
-  }
-
-  function saveLessonRecord() {
-    alert('新しいお稽古記録（添付ファイル含む）が保存されました。');
-    document.getElementById('new-record-form').classList.remove('active');
-    document.getElementById('file-preview-container').innerHTML = ''; // 保存後にプレビューをクリア
-  }
-</script>
 
 </body>
 </html>
