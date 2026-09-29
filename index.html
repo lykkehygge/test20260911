@@ -3,51 +3,263 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>體調律研究所 電子カルテシステム</title>
+  <title>體調律研究所 - 電子カルテ</title>
+  <!-- エレガントな印象を与えるWebフォントを読み込み -->
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 16px; background-color: #f4f6f8; color: #333; line-height: 1.5; }
-    .container { max-width: 700px; margin: 0 auto; }
+    :root {
+      --primary: #6b8c74;       /* 落ち着いたセージグリーン */
+      --primary-hover: #56735e; /* ホバー時の濃いグリーン */
+      --bg-color: #f5f7f5;      /* 温かみのあるオフホワイト背景 */
+      --card-bg: #ffffff;
+      --text-main: #333a35;     /* 柔らかい黒（チャコール） */
+      --text-light: #7b857e;
+      --border: #dce3df;
+      --accent: #d4a373;        /* アクセントカラー（お会計など） */
+    }
+
+    body { 
+      font-family: 'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, sans-serif; 
+      padding: 24px 16px; 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .container { 
+      max-width: 800px; 
+      margin: 0 auto; 
+    }
     
     /* カード全体のスタイル */
-    .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 24px; }
-    .card h1 { font-size: 22px; color: #5a7162; border-bottom: 2px solid #5a7162; padding-bottom: 10px; margin-top: 0; text-align: center; }
-    .card h2 { font-size: 18px; color: #333; margin-top: 0; border-left: 4px solid #5a7162; padding-left: 8px; }
+    .card { 
+      background: var(--card-bg); 
+      padding: 40px; 
+      border-radius: 20px; 
+      box-shadow: 0 8px 30px rgba(107, 140, 116, 0.08); 
+      margin-bottom: 32px; 
+      border: 1px solid rgba(255,255,255,0.5);
+    }
     
-    /* セクション見出し（フォーム内） */
-    .section-title { font-size: 16px; background-color: #eef2ef; padding: 8px 12px; border-radius: 4px; color: #2c3e30; margin: 24px 0 16px 0; font-weight: bold; }
+    .card h1 { 
+      font-size: 24px; 
+      color: var(--primary); 
+      text-align: center; 
+      margin: 0 0 32px 0; 
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .card h2 { 
+      font-size: 20px; 
+      color: var(--text-main); 
+      margin: 0 0 24px 0; 
+      display: flex;
+      align-items: center;
+    }
+    .card h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 2px;
+      margin-right: 12px;
+    }
+    
+    /* セクション見出し */
+    .section-title { 
+      font-size: 1.1rem; 
+      color: var(--primary); 
+      border-bottom: 2px solid #ebf0ee; 
+      padding-bottom: 8px; 
+      margin: 40px 0 20px 0; 
+      font-weight: 700; 
+      letter-spacing: 0.05em;
+    }
     
     /* フォーム要素 */
-    .form-group { margin-bottom: 16px; }
-    .form-row { display: flex; gap: 12px; margin-bottom: 16px; }
-    .form-row .form-group { flex: 1; margin-bottom: 0; }
-    label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.9em; }
-    input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea { 
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; 
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .form-row .form-group { flex: 1; min-width: 200px; margin-bottom: 0; }
+    
+    label { 
+      display: block; 
+      margin-bottom: 8px; 
+      font-weight: 500; 
+      font-size: 0.95em; 
+      color: var(--text-light);
     }
-    textarea { height: 80px; resize: vertical; }
     
-    /* ラジオ・チェックボックスのレイアウト */
-    .choice-group label { display: inline-flex; align-items: center; margin-right: 16px; font-weight: normal; margin-bottom: 8px; cursor: pointer; }
-    .inline-text { width: auto !important; display: inline-block !important; padding: 4px 8px !important; margin-left: 4px; border-bottom: 1px solid #ccc !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; }
+    input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea { 
+      width: 100%; 
+      padding: 14px 16px; 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      box-sizing: border-box; 
+      font-size: 16px; 
+      background-color: #fbfcfb;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      color: var(--text-main);
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(107, 140, 116, 0.15);
+    }
+    textarea { height: 100px; resize: vertical; }
     
-    /* キャンバス */
-    #canvas-container { border: 1px solid #ccc; border-radius: 6px; background-color: #fafafa; background-size: contain; background-repeat: no-repeat; background-position: center; touch-action: none; position: relative; }
+    /* ラジオ・チェックボックスのモダン化 */
+    .choice-group label { 
+      display: inline-flex; 
+      align-items: center; 
+      margin-right: 20px; 
+      margin-bottom: 12px; 
+      cursor: pointer; 
+      font-weight: 400;
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .choice-group label:hover {
+      background: rgba(107, 140, 116, 0.05);
+    }
+    input[type="radio"], input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    
+    /* その他入力欄のインライン化 */
+    .inline-text { 
+      width: auto !important; 
+      display: inline-block !important; 
+      padding: 4px 8px !important; 
+      margin-left: 8px; 
+      border-bottom: 1px solid var(--border) !important; 
+      border-top: none !important; 
+      border-left: none !important; 
+      border-right: none !important; 
+      border-radius: 0 !important; 
+      background: transparent !important;
+    }
+    .inline-text:focus { box-shadow: none !important; border-bottom-color: var(--primary) !important; }
+    
+    /* キャンバス（シェーマ） */
+    #canvas-container { 
+      border: 1px solid var(--border); 
+      border-radius: 16px; 
+      background-color: #fafbfc; 
+      background-size: contain; 
+      background-repeat: no-repeat; 
+      background-position: center; 
+      touch-action: none; 
+      position: relative; 
+      overflow: hidden;
+    }
     canvas { display: block; width: 100%; height: 350px; }
     
-    /* ボタン */
-    .btn { padding: 14px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; display: block; width: 100%; text-align: center; }
-    .btn-save-master { background-color: #333; color: white; margin-top: 24px; }
-    .btn-add-record { background-color: #5a7162; color: white; margin-top: 20px; }
-    .btn-small { padding: 6px 12px; font-size: 14px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; }
+    /* ボタン類 */
+    .btn { 
+      padding: 16px; 
+      font-size: 16px; 
+      font-weight: 700; 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      display: block; 
+      width: 100%; 
+      text-align: center; 
+      transition: all 0.3s ease;
+      letter-spacing: 0.05em;
+    }
+    .btn-save-master { 
+      background-color: var(--text-main); 
+      color: white; 
+      margin-top: 40px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-save-master:hover { background-color: #1a1e1b; transform: translateY(-2px); }
+    
+    .btn-add-record { 
+      background-color: var(--primary); 
+      color: white; 
+      margin-top: 24px; 
+      box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2);
+    }
+    .btn-add-record:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+    
+    .btn-small { 
+      padding: 8px 16px; 
+      font-size: 14px; 
+      background: #f0f2f1; 
+      color: var(--text-light);
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .btn-small:hover { background: #e2e8e4; color: var(--text-main); }
     
     /* 履歴リスト */
-    .record-item { background: #f9f9f9; border-left: 4px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
-    .record-date { font-weight: bold; color: #5a7162; margin-bottom: 4px; font-size: 0.9em; }
-    .record-price { color: #d35400; font-size: 0.9em; font-weight: bold; margin-top: 8px; }
+    .record-list { display: flex; flex-direction: column; gap: 16px; }
+    .record-item { 
+      background: #fafbfc; 
+      border: 1px solid var(--border);
+      padding: 20px; 
+      border-radius: 12px; 
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .record-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .record-date { 
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .record-content { font-size: 1em; margin-bottom: 12px; }
+    .record-price { 
+      color: var(--accent); 
+      font-size: 1.1em; 
+      font-weight: 700; 
+      text-align: right;
+    }
     
-    /* アコーディオン */
-    #new-record-form { display: none; background: #eef2ef; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    /* アコーディオン（追加フォーム） */
+    #new-record-form { 
+      display: none; 
+      background: #f7f9f8; 
+      padding: 24px; 
+      border-radius: 16px; 
+      margin-top: 24px; 
+      border: 1px solid var(--border);
+      animation: slideDown 0.3s ease-out forwards;
+    }
     #new-record-form.active { display: block; }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* スマホ向け調整 */
+    @media (max-width: 600px) {
+      .card { padding: 24px 16px; }
+      .form-row { flex-direction: column; gap: 0; }
+    }
   </style>
 </head>
 <body>
@@ -55,7 +267,7 @@
 <div class="container">
   
   <!-- ===============================
-       上部：顧客マスター情報（カウンセリングシート全体）
+       上部：顧客マスター情報
        =============================== -->
   <div class="card">
     <h1>顧客カルテ（基本情報）</h1>
@@ -66,12 +278,12 @@
       <div class="form-group"><label>生年月日</label><input type="date" id="dob"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>氏名</label><input type="text" id="name"></div>
+      <div class="form-group"><label>氏名</label><input type="text" id="name" value="山田 花子"></div>
       <div class="form-group"><label>ご職業</label><input type="text" id="job"></div>
     </div>
     <div class="form-row">
-      <div class="form-group" style="flex: 0.3;"><label>〒</label><input type="text" id="zip"></div>
-      <div class="form-group"><label>住所</label><input type="text" id="address"></div>
+      <div class="form-group" style="flex: 0.4;"><label>〒</label><input type="text" id="zip"></div>
+      <div class="form-group" style="flex: 1.6;"><label>住所</label><input type="text" id="address"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>電話番号</label><input type="tel" id="phone"></div>
@@ -80,7 +292,7 @@
 
     <div class="section-title">ご来店について</div>
     <div class="form-group choice-group">
-      <label>ご来店のきっかけ</label><br>
+      <label style="display:block; width:100%;">ご来店のきっかけ</label>
       <label><input type="radio" name="source" value="当店のホームページ"> 当店のホームページ</label>
       <label><input type="radio" name="source" value="知人の紹介"> 知人の紹介</label>
       <label><input type="radio" name="source" value="看板やチラシ"> 看板やチラシ</label>
@@ -89,7 +301,7 @@
     </div>
 
     <div class="form-group choice-group">
-      <label>本日のご来店目的(複数選択可)</label><br>
+      <label style="display:block; width:100%;">本日のご来店目的 (複数選択可)</label>
       <label><input type="checkbox" name="purpose" value="姿勢改善"> 姿勢改善</label>
       <label><input type="checkbox" name="purpose" value="不調改善"> 不調改善</label>
       <label><input type="checkbox" name="purpose" value="痛み改善"> 痛み改善</label>
@@ -98,7 +310,7 @@
     </div>
 
     <div class="form-group choice-group">
-      <label>整えたいことは何ですか?</label><br>
+      <label style="display:block; width:100%;">整えたいことは何ですか?</label>
       <label><input type="checkbox" name="tune" value="お肉の状態"> お肉の状態</label>
       <label><input type="checkbox" name="tune" value="疲れないカラダ"> 疲れないカラダ</label>
       <label><input type="checkbox" name="tune" value="内臓の健康"> 内臓の健康</label>
@@ -117,42 +329,46 @@
         <!-- 実際の運用時は以下のURLを身体のイラスト画像URLに差し替えます -->
         <canvas id="signature-pad" style="background-image: url('https://via.placeholder.com/600x350.png?text=Body+Schema+Image'); background-size: contain; background-repeat: no-repeat; background-position: center;"></canvas>
       </div>
-      <div style="text-align: right; margin-top: 5px;">
-        <button type="button" class="btn-small" onclick="clearCanvas()">クリア</button>
+      <div style="text-align: right; margin-top: 12px;">
+        <button type="button" class="btn-small" onclick="clearCanvas()">クリア（書き直す）</button>
       </div>
     </div>
 
     <div class="section-title">身体・健康状態について</div>
     <div class="form-group choice-group">
-      <label>カラダのためにしている運動はありますか?</label><br>
+      <label style="display:block; width:100%;">カラダのためにしている運動はありますか?</label>
       <label><input type="radio" name="exercise" value="していない"> していない</label>
       <label><input type="radio" name="exercise" value="している"> している(種目頻度: <input type="text" class="inline-text" style="width: 150px !important;">)</label>
     </div>
     
     <div class="form-group choice-group">
-      <label>現在治療中のご病気、過去になった病気</label><br>
+      <label style="display:block; width:100%;">現在治療中のご病気、過去になった病気</label>
       <label><input type="radio" name="disease" value="なし"> なし</label>
       <label><input type="radio" name="disease" value="あり"> あり(病名: <input type="text" class="inline-text" style="width: 150px !important;">)</label>
-      <div style="margin-top: 4px;">お薬: <input type="text" class="inline-text" style="width: 80% !important;"></div>
+      <div style="margin-top: 12px; font-size: 0.95em; color: var(--text-light); font-weight: 500;">
+        お薬: <input type="text" class="inline-text" style="width: calc(100% - 60px) !important;">
+      </div>
     </div>
 
-    <div class="form-group choice-group">
-      <label>動きの変化を動画で残していっていいですか?</label><br>
-      <span style="font-size: 0.85em; color: #666; display: block; margin-bottom: 8px;">※體調律研究所では、動きの美しさを大切にしています。ご自身の変化が誰かの背中を押すきっかけになるので、美しく撮れた時には掲載にご協力いただけたら嬉しいです。</span>
+    <div class="form-group choice-group" style="background: #f9faf9; padding: 16px; border-radius: 12px;">
+      <label style="display:block; width:100%;">動きの変化を動画で残していっていいですか?</label>
+      <span style="font-size: 0.85em; color: var(--text-light); display: block; margin-bottom: 12px; line-height: 1.4;">
+        ※體調律研究所では、動きの美しさを大切にしています。<br>ご自身の変化が誰かの背中を押すきっかけになるので、美しく撮れた時には掲載にご協力いただけたら嬉しいです。
+      </span>
       <label><input type="radio" name="video_consent" value="はい"> はい</label>
       <label><input type="radio" name="video_consent" value="いいえ"> いいえ</label>
     </div>
 
-    <div class="section-title">女性特有の項目 (差し支えがなければお答えください)</div>
+    <div class="section-title">女性特有の項目 <span style="font-size: 0.8em; font-weight: normal; color: var(--text-light);">(差し支えがなければお答えください)</span></div>
     <div class="form-row">
       <div class="form-group choice-group">
-        <label>生理について</label><br>
+        <label style="display:block; width:100%;">生理について</label>
         <label><input type="radio" name="period" value="順調"> 順調</label>
         <label><input type="radio" name="period" value="不順"> 不順</label>
         <label><input type="radio" name="period" value="閉経"> 閉経</label>
       </div>
       <div class="form-group choice-group">
-        <label>生理痛について</label><br>
+        <label style="display:block; width:100%;">生理痛について</label>
         <label><input type="radio" name="period_pain" value="きつい"> きつい</label>
         <label><input type="radio" name="period_pain" value="ふつう"> ふつう</label>
         <label><input type="radio" name="period_pain" value="ない"> ない</label>
@@ -161,20 +377,20 @@
     
     <div class="form-row">
       <div class="form-group choice-group">
-        <label>出産経験</label><br>
+        <label style="display:block; width:100%;">出産経験</label>
         <label><input type="radio" name="childbirth" value="ある"> ある</label>
         <label><input type="radio" name="childbirth" value="ない"> ない</label>
       </div>
       <div class="form-group choice-group">
-        <label>現在妊娠していますか?</label><br>
+        <label style="display:block; width:100%;">現在妊娠していますか?</label>
         <label><input type="radio" name="pregnancy" value="はい"> はい</label>
         <label><input type="radio" name="pregnancy" value="いいえ"> いいえ</label>
       </div>
     </div>
     
-    <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+    <div class="form-group" style="display: flex; align-items: center; gap: 12px;">
       <label style="margin: 0;">妊娠されている方、妊娠何ヶ月ですか?</label>
-      <input type="number" style="width: 80px;" min="0" max="10"> ヶ月
+      <div><input type="number" style="width: 80px; text-align: right;" min="0" max="10"> ヶ月</div>
     </div>
 
     <div class="section-title">理想について</div>
@@ -187,20 +403,25 @@
       <textarea placeholder="自由にご記入ください"></textarea>
     </div>
     
-    <button class="btn btn-save-master" onclick="alert('顧客マスター情報を更新します')">基本情報を更新する</button>
+    <button class="btn btn-save-master" onclick="alert('顧客マスター情報を更新します')">基本情報を保存・更新する</button>
   </div>
 
   <!-- ===============================
-       下部：お稽古記録（履歴リストと追加機能）
+       下部：お稽古記録
        =============================== -->
   <div class="card">
     <h2>過去のお稽古記録</h2>
     
     <div class="record-list">
       <div class="record-item">
-        <div class="record-date">2026年9月20日</div>
-        <div>骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。</div>
-        <div class="record-price">お会計: ¥8,000</div>
+        <div class="record-date">2026.09.20</div>
+        <div class="record-content">骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。自宅でのストレッチを指導。</div>
+        <div class="record-price">¥8,000</div>
+      </div>
+      <div class="record-item">
+        <div class="record-date">2026.08.15</div>
+        <div class="record-content">初回カウンセリング。全体的な姿勢チェックと呼吸法の指導。</div>
+        <div class="record-price">¥10,000</div>
       </div>
     </div>
 
@@ -209,26 +430,28 @@
 
     <!-- 追加入力フォーム -->
     <div id="new-record-form">
-      <div class="form-group">
-        <label>月日</label>
-        <input type="date" id="newDate">
+      <div class="form-row">
+        <div class="form-group">
+          <label>月日</label>
+          <input type="date" id="newDate">
+        </div>
+        <div class="form-group">
+          <label>お会計 (¥)</label>
+          <input type="number" id="newPrice" placeholder="例: 5000">
+        </div>
       </div>
       <div class="form-group">
         <label>お稽古内容</label>
-        <textarea id="newContent" placeholder="本日の内容をご記入ください"></textarea>
+        <textarea id="newContent" placeholder="本日の内容や気付いたことをご記入ください"></textarea>
       </div>
-      <div class="form-group">
-        <label>お会計 (¥)</label>
-        <input type="number" id="newPrice" placeholder="例: 5000">
-      </div>
-      <button class="btn btn-save-master" style="background-color: #5a7162; margin-top: 10px;" onclick="saveLessonRecord()">記録を保存する</button>
+      <button class="btn btn-save-master" style="background-color: var(--primary); margin-top: 10px;" onclick="saveLessonRecord()">記録を保存する</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  // キャンバスの基本設定（スマホ＆マウス対応）
+  // キャンバスの処理（変更なし）
   const canvas = document.getElementById('signature-pad');
   const ctx = canvas.getContext('2d');
   const container = document.getElementById('canvas-container');
@@ -241,7 +464,7 @@
   resizeCanvas();
 
   let isDrawing = false;
-  ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#e74c3c';
+  ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#d4a373'; // ペンの色も少し柔らかいアクセントカラーに変更
 
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
@@ -259,7 +482,7 @@
 
   function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-  // 記録追加フォームの開閉
+  // アコーディオン
   function toggleNewRecordForm() {
     const form = document.getElementById('new-record-form');
     form.classList.toggle('active');
