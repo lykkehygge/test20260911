@@ -4,159 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>體調律研究所 - 電子カルテ</title>
-  <!-- エレガントな印象を与えるWebフォントを読み込み -->
   <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --primary: #6b8c74;       /* 落ち着いたセージグリーン */
-      --primary-hover: #56735e; /* ホバー時の濃いグリーン */
-      --bg-color: #f5f7f5;      /* 温かみのあるオフホワイト背景 */
+      --primary: #6b8c74;
+      --primary-hover: #56735e;
+      --bg-color: #f5f7f5;
       --card-bg: #ffffff;
-      --text-main: #333a35;     /* 柔らかい黒（チャコール） */
+      --text-main: #333a35;
       --text-light: #7b857e;
       --border: #dce3df;
-      --accent: #d4a373;        /* アクセントカラー（お会計など） */
+      --accent: #d4a373;
     }
 
-    body { 
-      font-family: 'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, sans-serif; 
-      padding: 24px 16px; 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      line-height: 1.6;
-      margin: 0;
-    }
+    body { font-family: 'Zen Kaku Gothic New', sans-serif; padding: 24px 16px; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; margin: 0; }
+    .container { max-width: 800px; margin: 0 auto; }
     
-    .container { 
-      max-width: 800px; 
-      margin: 0 auto; 
-    }
+    .card { background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 8px 30px rgba(107, 140, 116, 0.08); margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.5); }
+    .card h1 { font-size: 24px; color: var(--primary); text-align: center; margin: 0 0 32px 0; font-weight: 700; letter-spacing: 0.05em; }
+    .card h2 { font-size: 20px; color: var(--text-main); margin: 0 0 24px 0; display: flex; align-items: center; }
+    .card h2::before { content: ''; display: inline-block; width: 4px; height: 20px; background: var(--primary); border-radius: 2px; margin-right: 12px; }
     
-    /* カード全体のスタイル */
-    .card { 
-      background: var(--card-bg); 
-      padding: 40px; 
-      border-radius: 20px; 
-      box-shadow: 0 8px 30px rgba(107, 140, 116, 0.08); 
-      margin-bottom: 32px; 
-      border: 1px solid rgba(255,255,255,0.5);
-    }
+    .section-title { font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #ebf0ee; padding-bottom: 8px; margin: 40px 0 20px 0; font-weight: 700; letter-spacing: 0.05em; }
     
-    .card h1 { 
-      font-size: 24px; 
-      color: var(--primary); 
-      text-align: center; 
-      margin: 0 0 32px 0; 
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .card h2 { 
-      font-size: 20px; 
-      color: var(--text-main); 
-      margin: 0 0 24px 0; 
-      display: flex;
-      align-items: center;
-    }
-    .card h2::before {
-      content: '';
-      display: inline-block;
-      width: 4px;
-      height: 20px;
-      background: var(--primary);
-      border-radius: 2px;
-      margin-right: 12px;
-    }
-    
-    /* セクション見出し */
-    .section-title { 
-      font-size: 1.1rem; 
-      color: var(--primary); 
-      border-bottom: 2px solid #ebf0ee; 
-      padding-bottom: 8px; 
-      margin: 40px 0 20px 0; 
-      font-weight: 700; 
-      letter-spacing: 0.05em;
-    }
-    
-    /* フォーム要素 */
     .form-group { margin-bottom: 20px; }
     .form-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
     .form-row .form-group { flex: 1; min-width: 200px; margin-bottom: 0; }
     
-    label { 
-      display: block; 
-      margin-bottom: 8px; 
-      font-weight: 500; 
-      font-size: 0.95em; 
-      color: var(--text-light);
-    }
-    
+    label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.95em; color: var(--text-light); }
     input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea { 
-      width: 100%; 
-      padding: 14px 16px; 
-      border: 1px solid var(--border); 
-      border-radius: 12px; 
-      box-sizing: border-box; 
-      font-size: 16px; 
-      background-color: #fbfcfb;
-      transition: all 0.3s ease;
-      font-family: inherit;
-      color: var(--text-main);
+      width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; box-sizing: border-box; font-size: 16px; background-color: #fbfcfb; transition: all 0.3s ease; font-family: inherit; color: var(--text-main);
     }
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      background-color: #fff;
-      box-shadow: 0 0 0 4px rgba(107, 140, 116, 0.15);
-    }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(107, 140, 116, 0.15); }
     textarea { height: 100px; resize: vertical; }
     
-    /* ラジオ・チェックボックスのモダン化 */
-    .choice-group label { 
-      display: inline-flex; 
-      align-items: center; 
-      margin-right: 20px; 
-      margin-bottom: 12px; 
-      cursor: pointer; 
-      font-weight: 400;
-      color: var(--text-main);
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    .choice-group label:hover {
-      background: rgba(107, 140, 116, 0.05);
-    }
-    input[type="radio"], input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-right: 8px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
+    .choice-group label { display: inline-flex; align-items: center; margin-right: 20px; margin-bottom: 12px; cursor: pointer; font-weight: 400; color: var(--text-main); padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
+    .choice-group label:hover { background: rgba(107, 140, 116, 0.05); }
+    input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; margin-right: 8px; accent-color: var(--primary); cursor: pointer; }
     
-    /* その他入力欄のインライン化 */
-    .inline-text { 
-      width: auto !important; 
-      display: inline-block !important; 
-      padding: 4px 8px !important; 
-      margin-left: 8px; 
-      border-bottom: 1px solid var(--border) !important; 
-      border-top: none !important; 
-      border-left: none !important; 
-      border-right: none !important; 
-      border-radius: 0 !important; 
-      background: transparent !important;
-    }
+    .inline-text { width: auto !important; display: inline-block !important; padding: 4px 8px !important; margin-left: 8px; border-bottom: 1px solid var(--border) !important; border-top: none !important; border-left: none !important; border-right: none !important; border-radius: 0 !important; background: transparent !important; }
     .inline-text:focus { box-shadow: none !important; border-bottom-color: var(--primary) !important; }
+    
+    /* シェーマツールバーのスタイル */
+    .canvas-toolbar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
+    .tool-btn { padding: 8px 16px; font-size: 14px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; color: var(--text-main); transition: all 0.2s; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .tool-btn:hover { background: #f0f2f1; }
+    .tool-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 6px rgba(107,140,116,0.2); }
+    
+    /* ペンの色アイコン */
+    .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background-color: #e74c3c; }
+    .dot-blue { background-color: #3498db; }
+    .dot-black { background-color: #333a35; }
+    .dot-eraser { background-color: #fff; border: 1px solid #ccc; width: 10px; height: 10px; }
     
     /* キャンバス（シェーマ） */
     #canvas-container { 
       border: 1px solid var(--border); 
       border-radius: 16px; 
       background-color: #fafbfc; 
+      /* ↓ご指定いただいた画像URLを背景に設定 */
+      background-image: url('https://lykkehygge.github.io/test20260911/body.png'); 
       background-size: contain; 
       background-repeat: no-repeat; 
       background-position: center; 
@@ -164,111 +73,37 @@
       position: relative; 
       overflow: hidden;
     }
-    canvas { display: block; width: 100%; height: 350px; }
+    canvas { display: block; width: 100%; height: 400px; }
     
     /* ボタン類 */
-    .btn { 
-      padding: 16px; 
-      font-size: 16px; 
-      font-weight: 700; 
-      border: none; 
-      border-radius: 12px; 
-      cursor: pointer; 
-      display: block; 
-      width: 100%; 
-      text-align: center; 
-      transition: all 0.3s ease;
-      letter-spacing: 0.05em;
-    }
-    .btn-save-master { 
-      background-color: var(--text-main); 
-      color: white; 
-      margin-top: 40px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+    .btn { padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; display: block; width: 100%; text-align: center; transition: all 0.3s ease; letter-spacing: 0.05em; }
+    .btn-save-master { background-color: var(--text-main); color: white; margin-top: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .btn-save-master:hover { background-color: #1a1e1b; transform: translateY(-2px); }
     
-    .btn-add-record { 
-      background-color: var(--primary); 
-      color: white; 
-      margin-top: 24px; 
-      box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2);
-    }
+    .btn-add-record { background-color: var(--primary); color: white; margin-top: 24px; box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2); }
     .btn-add-record:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
     
-    .btn-small { 
-      padding: 8px 16px; 
-      font-size: 14px; 
-      background: #f0f2f1; 
-      color: var(--text-light);
-      border: none; 
-      border-radius: 8px; 
-      cursor: pointer; 
-      font-weight: 500;
-      transition: background 0.2s;
-    }
+    .btn-small { padding: 8px 16px; font-size: 14px; background: #f0f2f1; color: var(--text-light); border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
     .btn-small:hover { background: #e2e8e4; color: var(--text-main); }
     
-    /* 履歴リスト */
     .record-list { display: flex; flex-direction: column; gap: 16px; }
-    .record-item { 
-      background: #fafbfc; 
-      border: 1px solid var(--border);
-      padding: 20px; 
-      border-radius: 12px; 
-      position: relative;
-      transition: box-shadow 0.2s;
-    }
-    .record-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-    .record-date { 
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85em;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
+    .record-item { background: #fafbfc; border: 1px solid var(--border); padding: 20px; border-radius: 12px; transition: box-shadow 0.2s; }
+    .record-date { display: inline-block; background: var(--primary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85em; font-weight: 700; margin-bottom: 12px; }
     .record-content { font-size: 1em; margin-bottom: 12px; }
-    .record-price { 
-      color: var(--accent); 
-      font-size: 1.1em; 
-      font-weight: 700; 
-      text-align: right;
-    }
+    .record-price { color: var(--accent); font-size: 1.1em; font-weight: 700; text-align: right; }
     
-    /* アコーディオン（追加フォーム） */
-    #new-record-form { 
-      display: none; 
-      background: #f7f9f8; 
-      padding: 24px; 
-      border-radius: 16px; 
-      margin-top: 24px; 
-      border: 1px solid var(--border);
-      animation: slideDown 0.3s ease-out forwards;
-    }
+    #new-record-form { display: none; background: #f7f9f8; padding: 24px; border-radius: 16px; margin-top: 24px; border: 1px solid var(--border); animation: slideDown 0.3s ease-out forwards; }
     #new-record-form.active { display: block; }
     
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* スマホ向け調整 */
-    @media (max-width: 600px) {
-      .card { padding: 24px 16px; }
-      .form-row { flex-direction: column; gap: 0; }
-    }
+    @media (max-width: 600px) { .card { padding: 24px 16px; } .form-row { flex-direction: column; gap: 0; } }
   </style>
 </head>
 <body>
 
 <div class="container">
   
-  <!-- ===============================
-       上部：顧客マスター情報
-       =============================== -->
   <div class="card">
     <h1>顧客カルテ（基本情報）</h1>
     
@@ -290,6 +125,7 @@
       <div class="form-group"><label>メールアドレス</label><input type="email" id="email"></div>
     </div>
 
+    <!-- 中略: アンケート項目 (前回のコードと同じです。長くなるため省略せず残しています) -->
     <div class="section-title">ご来店について</div>
     <div class="form-group choice-group">
       <label style="display:block; width:100%;">ご来店のきっかけ</label>
@@ -297,7 +133,7 @@
       <label><input type="radio" name="source" value="知人の紹介"> 知人の紹介</label>
       <label><input type="radio" name="source" value="看板やチラシ"> 看板やチラシ</label>
       <label><input type="radio" name="source" value="SNSの投稿"> SNSの投稿</label>
-      <label><input type="radio" name="source" value="その他"> その他<input type="text" class="inline-text" placeholder=""></label>
+      <label><input type="radio" name="source" value="その他"> その他<input type="text" class="inline-text"></label>
     </div>
 
     <div class="form-group choice-group">
@@ -306,7 +142,7 @@
       <label><input type="checkbox" name="purpose" value="不調改善"> 不調改善</label>
       <label><input type="checkbox" name="purpose" value="痛み改善"> 痛み改善</label>
       <label><input type="checkbox" name="purpose" value="パフォーマンス向上"> パフォーマンス向上</label>
-      <label><input type="checkbox" name="purpose" value="その他"> その他<input type="text" class="inline-text" placeholder=""></label>
+      <label><input type="checkbox" name="purpose" value="その他"> その他<input type="text" class="inline-text"></label>
     </div>
 
     <div class="form-group choice-group">
@@ -320,19 +156,41 @@
       <label><input type="checkbox" name="tune" value="睡眠の状態"> 睡眠の状態</label>
       <label><input type="checkbox" name="tune" value="力みグセ"> 力みグセ</label>
       <label><input type="checkbox" name="tune" value="無理のない動き"> 無理のない動き</label>
-      <label><input type="checkbox" name="tune" value="その他"> その他<input type="text" class="inline-text" placeholder=""></label>
+      <label><input type="checkbox" name="tune" value="その他"> その他<input type="text" class="inline-text"></label>
     </div>
 
+    <!-- ==============================================
+         シェーマ（ツールバーとキャンバス）
+         ============================================== -->
     <div class="section-title">シェーマ（気になる場所に○）</div>
     <div class="form-group">
-      <div id="canvas-container">
-        <!-- 実際の運用時は以下のURLを身体のイラスト画像URLに差し替えます -->
-        <canvas id="signature-pad" style="background-image: url('https://lykkehygge.github.io/test20260911/body.png'); background-size: contain; background-repeat: no-repeat; background-position: center;"></canvas>
+      
+      <!-- ペン・消しゴム ツールバー -->
+      <div class="canvas-toolbar">
+        <!-- 初期状態は赤ペンをアクティブにしています -->
+        <button type="button" class="tool-btn active" onclick="setTool('pen', '#e74c3c', this)">
+          <span class="color-dot dot-red"></span>赤ペン
+        </button>
+        <button type="button" class="tool-btn" onclick="setTool('pen', '#3498db', this)">
+          <span class="color-dot dot-blue"></span>青ペン
+        </button>
+        <button type="button" class="tool-btn" onclick="setTool('pen', '#333a35', this)">
+          <span class="color-dot dot-black"></span>黒ペン
+        </button>
+        <button type="button" class="tool-btn" onclick="setTool('eraser', null, this)">
+          <span class="color-dot dot-eraser"></span>消しゴム
+        </button>
+        
+        <!-- 全消去ボタンは右寄せ -->
+        <button type="button" class="btn-small" onclick="clearCanvas()" style="margin-left: auto;">全消去</button>
       </div>
-      <div style="text-align: right; margin-top: 12px;">
-        <button type="button" class="btn-small" onclick="clearCanvas()">クリア（書き直す）</button>
+
+      <!-- キャンバス -->
+      <div id="canvas-container">
+        <canvas id="signature-pad"></canvas>
       </div>
     </div>
+    <!-- ============================================== -->
 
     <div class="section-title">身体・健康状態について</div>
     <div class="form-group choice-group">
@@ -406,9 +264,6 @@
     <button class="btn btn-save-master" onclick="alert('顧客マスター情報を更新します')">基本情報を保存・更新する</button>
   </div>
 
-  <!-- ===============================
-       下部：お稽古記録
-       =============================== -->
   <div class="card">
     <h2>過去のお稽古記録</h2>
     
@@ -418,17 +273,10 @@
         <div class="record-content">骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。自宅でのストレッチを指導。</div>
         <div class="record-price">¥8,000</div>
       </div>
-      <div class="record-item">
-        <div class="record-date">2026.08.15</div>
-        <div class="record-content">初回カウンセリング。全体的な姿勢チェックと呼吸法の指導。</div>
-        <div class="record-price">¥10,000</div>
-      </div>
     </div>
 
-    <!-- 追加ボタン -->
     <button class="btn btn-add-record" onclick="toggleNewRecordForm()">＋ 本日のお稽古記録を追加</button>
 
-    <!-- 追加入力フォーム -->
     <div id="new-record-form">
       <div class="form-row">
         <div class="form-group">
@@ -451,20 +299,46 @@
 </div>
 
 <script>
-  // キャンバスの処理（変更なし）
   const canvas = document.getElementById('signature-pad');
   const ctx = canvas.getContext('2d');
   const container = document.getElementById('canvas-container');
   
   function resizeCanvas() {
     canvas.width = container.offsetWidth;
-    canvas.height = 350;
+    canvas.height = 400; // 少し縦長に調整
   }
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
   let isDrawing = false;
-  ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#d4a373'; // ペンの色も少し柔らかいアクセントカラーに変更
+  let currentColor = '#e74c3c'; // デフォルトは赤ペン
+  
+  // 初期設定
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = currentColor;
+
+  // ツール切り替え関数（ペン・消しゴム）
+  function setTool(tool, color, btnElement) {
+    // ボタンのアクティブ状態を更新
+    const buttons = document.querySelectorAll('.tool-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    if (tool === 'eraser') {
+      // 消しゴムモード：描画されたものだけを透明にする（destination-out）
+      // ※背景画像はCSSでコンテナに設定しているため、キャンバス自体が透明になっても背景は消えません。
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.lineWidth = 20; // 消しゴムは太めに設定
+    } else {
+      // ペンモード：通常描画（source-over）
+      ctx.globalCompositeOperation = 'source-over';
+      currentColor = color;
+      ctx.strokeStyle = currentColor;
+      ctx.lineWidth = 3; // ペンは細く
+    }
+  }
 
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
@@ -473,14 +347,36 @@
     return { x: clientX - rect.left, y: clientY - rect.top };
   }
 
-  function startPosition(e) { isDrawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); e.preventDefault(); }
-  function draw(e) { if (!isDrawing) return; const pos = getPos(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); e.preventDefault(); }
+  function startPosition(e) { 
+    isDrawing = true; 
+    const pos = getPos(e); 
+    ctx.beginPath(); 
+    ctx.moveTo(pos.x, pos.y); 
+    e.preventDefault(); 
+  }
+  
+  function draw(e) { 
+    if (!isDrawing) return; 
+    const pos = getPos(e); 
+    ctx.lineTo(pos.x, pos.y); 
+    ctx.stroke(); 
+    e.preventDefault(); 
+  }
+  
   function endPosition() { isDrawing = false; }
 
-  canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mouseleave', endPosition);
-  canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', endPosition);
+  canvas.addEventListener('mousedown', startPosition); 
+  canvas.addEventListener('mousemove', draw); 
+  canvas.addEventListener('mouseup', endPosition); 
+  canvas.addEventListener('mouseleave', endPosition);
+  canvas.addEventListener('touchstart', startPosition, {passive: false}); 
+  canvas.addEventListener('touchmove', draw, {passive: false}); 
+  canvas.addEventListener('touchend', endPosition);
 
-  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  // 全消去関数
+  function clearCanvas() { 
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+  }
 
   // アコーディオン
   function toggleNewRecordForm() {
