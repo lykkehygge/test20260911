@@ -3,125 +3,124 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>體調律研究所 電子カルテシステム</title>
+  <title>體調律研究所 電子カルテ</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 16px; background-color: #f4f6f8; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #5a7162; font-size: 20px; border-bottom: 2px solid #5a7162; padding-bottom: 10px; }
-    h2 { font-size: 16px; background-color: #eef2ef; padding: 8px; border-left: 4px solid #5a7162; margin-top: 24px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 16px; background-color: #f4f6f8; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; }
+    
+    /* 顧客情報カード（上部） */
+    .master-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    .master-card h1 { font-size: 20px; color: #5a7162; border-bottom: 2px solid #5a7162; padding-bottom: 10px; margin-top: 0; }
+    
+    /* 履歴カード（下部） */
+    .history-section { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .history-section h2 { font-size: 18px; color: #333; margin-top: 0; border-left: 4px solid #5a7162; padding-left: 8px; }
+    
+    /* フォーム要素 */
     .form-group { margin-bottom: 16px; }
     label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 0.9em; }
-    input[type="text"], input[type="date"], input[type="number"], input[type="email"], input[type="tel"], textarea {
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px;
-    }
+    input[type="text"], input[type="date"], input[type="number"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
     textarea { height: 80px; resize: vertical; }
-    .checkbox-group label, .radio-group label { display: inline-block; margin-right: 12px; font-weight: normal; margin-bottom: 4px; }
     
-    /* キャンバス（シェーマ）部分 */
-    #canvas-container {
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      /* ↓ここに切り取った女性の身体図の画像URLを指定します */
-      background-image: url('https://lykkehygge.github.io/test20260911/body.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      touch-action: none;
-    }
+    /* キャンバス */
+    #canvas-container { border: 1px solid #ccc; border-radius: 6px; background-color: #fafafa; background-size: contain; background-repeat: no-repeat; background-position: center; touch-action: none; }
     canvas { display: block; width: 100%; height: 300px; }
     
-    .button-group { display: flex; gap: 10px; margin-top: 24px; }
-    button { flex: 1; padding: 14px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-    .btn-clear { background-color: #e0e0e0; color: #333; }
-    .btn-save { background-color: #5a7162; color: white; }
+    /* 過去の記録リスト */
+    .record-list { margin-top: 20px; }
+    .record-item { background: #f9f9f9; border-left: 4px solid #ccc; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
+    .record-date { font-weight: bold; color: #5a7162; margin-bottom: 4px; font-size: 0.9em; }
+    .record-price { color: #d35400; font-size: 0.9em; font-weight: bold; margin-top: 8px; }
+    
+    /* ボタン類 */
+    .btn { padding: 12px; font-size: 16px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; display: block; width: 100%; text-align: center; }
+    .btn-save-master { background-color: #333; color: white; margin-top: 10px; }
+    .btn-add-record { background-color: #5a7162; color: white; margin-top: 20px; }
+    .btn-small { padding: 6px 12px; font-size: 14px; background: #e0e0e0; border: none; border-radius: 4px; cursor: pointer; }
+    
+    /* アコーディオン（追加フォームの開閉） */
+    #new-record-form { display: none; background: #eef2ef; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    #new-record-form.active { display: block; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>體調律研究所 電子カルテ</h1>
   
-  <!-- お稽古記録セクション -->
-  <h2>本日のお稽古記録</h2>
-  <div class="form-group">
-    <label>月日</label>
-    <input type="date" id="lessonDate">
-  </div>
-  <div class="form-group">
-    <label>お稽古内容</label>
-    <textarea id="lessonContent" placeholder="本日の内容をご記入ください"></textarea>
-  </div>
-  <div class="form-group">
-    <label>お会計 (¥)</label>
-    <input type="number" id="price" placeholder="例: 5000">
+  <!-- ===============================
+       上部：お客様情報 ＆ シェーマ（1人につき1つ）
+       =============================== -->
+  <div class="master-card">
+    <h1>顧客カルテ（山田 花子 様）</h1>
+    
+    <div class="form-group">
+      <label>お客様情報 (カウンセリングシート)</label>
+      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <input type="text" value="山田 花子" placeholder="氏名" style="flex: 1;">
+        <input type="tel" value="090-XXXX-XXXX" placeholder="電話番号" style="flex: 1;">
+      </div>
+      <input type="text" value="腰痛改善、姿勢改善" placeholder="来店目的など">
+    </div>
+
+    <div class="form-group">
+      <label>気になる場所に○をつけてください</label>
+      <div id="canvas-container">
+        <canvas id="signature-pad"></canvas>
+      </div>
+      <div style="text-align: right; margin-top: 5px;">
+        <button type="button" class="btn-small" onclick="clearCanvas()">クリア</button>
+      </div>
+    </div>
+    
+    <button class="btn btn-save-master">基本情報を更新する</button>
   </div>
 
-  <!-- シェーマ（図への書き込み）セクション -->
-  <h2>気になる場所に○をつけてください</h2>
-  <div class="form-group">
-    <div id="canvas-container">
-      <canvas id="signature-pad"></canvas>
+  <!-- ===============================
+       下部：お稽古記録（複数並ぶエリア）
+       =============================== -->
+  <div class="history-section">
+    <h2>過去のお稽古記録</h2>
+    
+    <!-- 過去の記録リスト（スプレッドシートから読み込んで表示するイメージ） -->
+    <div class="record-list">
+      <div class="record-item">
+        <div class="record-date">2026年9月20日</div>
+        <div>骨盤の歪み調整、肩甲骨周りのリリース。右肩の力みグセあり。</div>
+        <div class="record-price">お会計: ¥8,000</div>
+      </div>
+      <div class="record-item">
+        <div class="record-date">2026年8月15日</div>
+        <div>初回カウンセリング。全体的な姿勢チェックと呼吸法の指導。</div>
+        <div class="record-price">お会計: ¥10,000</div>
+      </div>
     </div>
-    <div style="text-align: right; margin-top: 5px;">
-      <button type="button" class="btn-clear" onclick="clearCanvas()" style="padding: 6px 12px; font-size: 14px; flex: none;">クリア</button>
+
+    <!-- 追加ボタン -->
+    <button class="btn btn-add-record" onclick="toggleNewRecordForm()">＋ 本日のお稽古記録を追加</button>
+
+    <!-- 追加入力フォーム（ボタンを押すと開く） -->
+    <div id="new-record-form">
+      <div class="form-group">
+        <label>月日</label>
+        <input type="date" id="newDate">
+      </div>
+      <div class="form-group">
+        <label>お稽古内容</label>
+        <textarea id="newContent" placeholder="本日の内容をご記入ください"></textarea>
+      </div>
+      <div class="form-group">
+        <label>お会計 (¥)</label>
+        <input type="number" id="newPrice" placeholder="例: 5000">
+      </div>
+      <button class="btn btn-save-master" style="background-color: #5a7162;" onclick="saveLessonRecord()">記録を保存する</button>
     </div>
+
   </div>
 
-  <!-- お客様情報セクション -->
-  <h2>お客様情報 (カウンセリングシート)</h2>
-  <div class="form-group"><label>氏名</label><input type="text" id="name"></div>
-  <div class="form-group"><label>フリガナ</label><input type="text" id="furigana"></div>
-  <div style="display: flex; gap: 10px;">
-    <div class="form-group" style="flex: 1;"><label>生年月日</label><input type="date" id="dob"></div>
-    <div class="form-group" style="flex: 1;"><label>ご職業</label><input type="text" id="job"></div>
-  </div>
-  <div class="form-group"><label>ご住所</label><input type="text" id="address"></div>
-  <div class="form-group"><label>電話番号</label><input type="tel" id="phone"></div>
-  
-  <!-- カウンセリングアンケート -->
-  <div class="form-group">
-    <label>ご来店のきっかけ</label>
-    <div class="radio-group">
-      <label><input type="radio" name="source" value="当店のホームページ"> HP</label>
-      <label><input type="radio" name="source" value="知人の紹介"> 知人の紹介</label>
-      <label><input type="radio" name="source" value="看板やチラシ"> 看板・チラシ</label>
-      <label><input type="radio" name="source" value="SNSの投稿"> SNS</label>
-      <label><input type="radio" name="source" value="その他"> その他</label>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>本日のご来店目的（複数可）</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="purpose" value="姿勢改善"> 姿勢改善</label>
-      <label><input type="checkbox" name="purpose" value="不調改善"> 不調改善</label>
-      <label><input type="checkbox" name="purpose" value="痛み改善"> 痛み改善</label>
-      <label><input type="checkbox" name="purpose" value="パフォーマンス向上"> パフォーマンス向上</label>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>整えたいことは何ですか？</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="tune" value="お肉の状態"> お肉の状態</label>
-      <label><input type="checkbox" name="tune" value="疲れないカラダ"> 疲れないカラダ</label>
-      <label><input type="checkbox" name="tune" value="内臓の健康"> 内臓の健康</label>
-      <label><input type="checkbox" name="tune" value="自律神経"> 自律神経</label>
-      <label><input type="checkbox" name="tune" value="ホルモンバランス"> ホルモンバランス</label>
-      <label><input type="checkbox" name="tune" value="痛みのないカラダ"> 痛みのないカラダ</label>
-      <label><input type="checkbox" name="tune" value="睡眠の状態"> 睡眠の状態</label>
-      <label><input type="checkbox" name="tune" value="力みグセ"> 力みグセ</label>
-      <label><input type="checkbox" name="tune" value="無理のない動き"> 無理のない動き</label>
-    </div>
-  </div>
-
-  <div class="button-group">
-    <button class="btn-save" onclick="saveData()">この内容でカルテを保存する</button>
-  </div>
 </div>
 
 <script>
-  // キャンバスの処理（以前と同じで、赤ペンに設定しています）
+  // キャンバスの基本設定（省略可・前回のコードと同じです）
   const canvas = document.getElementById('signature-pad');
   const ctx = canvas.getContext('2d');
   const container = document.getElementById('canvas-container');
@@ -134,9 +133,7 @@
   resizeCanvas();
 
   let isDrawing = false;
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#e74c3c'; // 赤色（目立たせるため）
+  ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#e74c3c';
 
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
@@ -154,31 +151,18 @@
 
   function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-  // データの収集と保存処理
-  function saveData() {
-    // チェックボックスの値を取得
-    const purposes = Array.from(document.querySelectorAll('input[name="purpose"]:checked')).map(el => el.value).join(', ');
-    const tunes = Array.from(document.querySelectorAll('input[name="tune"]:checked')).map(el => el.value).join(', ');
-    const source = document.querySelector('input[name="source"]:checked') ? document.querySelector('input[name="source"]:checked').value : '';
+  // 記録追加フォームの開閉
+  function toggleNewRecordForm() {
+    const form = document.getElementById('new-record-form');
+    form.classList.toggle('active');
+    // 今日の日付を自動セット
+    document.getElementById('newDate').valueAsDate = new Date();
+  }
 
-    const data = {
-      lessonDate: document.getElementById('lessonDate').value,
-      lessonContent: document.getElementById('lessonContent').value,
-      price: document.getElementById('price').value,
-      name: document.getElementById('name').value,
-      furigana: document.getElementById('furigana').value,
-      dob: document.getElementById('dob').value,
-      job: document.getElementById('job').value,
-      address: document.getElementById('address').value,
-      phone: document.getElementById('phone').value,
-      source: source,
-      purposes: purposes,
-      tunes: tunes,
-      image: canvas.toDataURL('image/png')
-    };
-
-    alert('保存処理を実行します...\n(GASへの送信処理がここに繋がります)');
-    // 実際にはここで google.script.run.saveRecord(data); を呼び出します
+  // 記録の保存処理（ダミー）
+  function saveLessonRecord() {
+    alert('「シート2：お稽古記録」に新しい行として保存されます。');
+    document.getElementById('new-record-form').classList.remove('active');
   }
 </script>
 
