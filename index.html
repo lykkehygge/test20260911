@@ -9,7 +9,7 @@
     :root {
       --primary: #6b8c74; --primary-hover: #56735e; --bg-color: #f5f7f5;
       --card-bg: #ffffff; --text-main: #333a35; --text-light: #7b857e;
-      --border: #dce3df; --accent: #d4a373;
+      --border: #dce3df; --accent: #d4a373; --bg-light: #f0f2f1;
     }
     body { font-family: 'Zen Kaku Gothic New', sans-serif; padding: 24px 16px; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; margin: 0; }
     .container { max-width: 900px; margin: 0 auto; }
@@ -19,29 +19,65 @@
     .card-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; }
     .card-title::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--primary); border-radius: 2px; margin-right: 12px; }
 
-    /* ダッシュボード（売上・利用数） */
+    /* =========================================
+       予約スケジュール (タブとコンテンツ)
+       ========================================= */
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 12px; overflow-x: auto; }
+    .tab-btn { padding: 8px 24px; font-size: 15px; font-weight: 700; background: transparent; border: none; color: var(--text-light); cursor: pointer; border-radius: 20px; transition: 0.2s; white-space: nowrap; }
+    .tab-btn:hover { background: var(--bg-light); color: var(--text-main); }
+    .tab-btn.active { background: var(--primary); color: white; }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease-out; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* 本日・今週のリスト表示 */
+    .schedule-list { display: flex; flex-direction: column; gap: 12px; }
+    .schedule-item { display: flex; align-items: stretch; background: #fafbfc; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .schedule-time { background: var(--bg-light); padding: 16px; min-width: 80px; text-align: center; font-weight: 700; color: var(--primary); display: flex; flex-direction: column; justify-content: center; }
+    .schedule-time span { font-size: 0.8em; color: var(--text-light); font-weight: normal; }
+    .schedule-info { padding: 16px; flex: 1; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .schedule-name { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; }
+    .schedule-detail { font-size: 0.9em; color: var(--text-light); }
+    .btn-karte { padding: 8px 16px; font-size: 14px; background: white; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; cursor: pointer; font-weight: 700; white-space: nowrap; transition: 0.2s; }
+    .btn-karte:hover { background: var(--primary); color: white; }
+
+    /* 今月のカレンダー表示 */
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 700; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+    .day-name { font-size: 0.85em; color: var(--text-light); font-weight: 500; padding-bottom: 8px; }
+    .day-cell { aspect-ratio: 1; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; transition: 0.2s; position: relative; }
+    .day-cell:hover { background: var(--bg-light); }
+    .day-cell.empty { border: none; background: transparent; cursor: default; }
+    .day-cell.today { background: rgba(107, 140, 116, 0.1); font-weight: 700; color: var(--primary); border-color: var(--primary); }
+    
+    /* 予約マーカー (●) */
+    .reservation-dots { display: flex; gap: 4px; margin-top: 4px; }
+    .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+    .dot.full { background: #e74c3c; } /* 満枠のイメージ色 */
+
+    /* =========================================
+       ダッシュボード（売上・利用数）等
+       ========================================= */
     .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
     .stat-box { background: #fafbfc; border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
     .stat-title { font-size: 0.9em; color: var(--text-light); font-weight: 500; margin-bottom: 8px; }
     .stat-value { font-size: 28px; font-weight: 700; color: var(--primary); }
     .stat-value.accent { color: var(--accent); }
-    .date-filter { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-    input[type="date"], input[type="text"] { padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; font-family: inherit; color: var(--text-main); }
     
-    /* 検索バー */
+    /* 検索バー・アクションボタン */
     .search-wrapper { display: flex; gap: 12px; }
     .search-input { flex: 1; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 16px; transition: 0.3s; }
     .search-input:focus { border-color: var(--primary); outline: none; }
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
     
-    /* アクションボタン（新規登録・プラン） */
-    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .btn { padding: 16px; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; text-align: center; transition: 0.3s; }
-    .btn-primary { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(107, 140, 116, 0.2); }
+    .btn-primary { background-color: var(--primary); color: white; }
     .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
     .btn-secondary { background-color: var(--text-main); color: white; }
     .btn-secondary:hover { background-color: #1a1e1b; transform: translateY(-2px); }
 
-    @media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } .search-wrapper { flex-direction: column; } }
+    @media (max-width: 600px) { .action-grid { grid-template-columns: 1fr; } .search-wrapper { flex-direction: column; } .schedule-info { flex-direction: column; align-items: flex-start; gap: 12px; } .btn-karte { width: 100%; text-align: center; } }
   </style>
 </head>
 <body>
@@ -49,12 +85,153 @@
 <div class="container">
   <h1>體調律研究所システム</h1>
 
-  <!-- 売上・利用数ダッシュボード -->
+  <!-- ===============================
+       予約スケジュール (日・週・月)
+       =============================== -->
+  <div class="card">
+    <div class="card-title">📅 予約スケジュール</div>
+    
+    <!-- タブボタン -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('day')">本日 (9/30)</button>
+      <button class="tab-btn" onclick="switchTab('week')">今週</button>
+      <button class="tab-btn" onclick="switchTab('month')">今月 (10月)</button>
+    </div>
+
+    <!-- 1. 本日のビュー -->
+    <div id="tab-day" class="tab-content active">
+      <div class="schedule-list">
+        <div class="schedule-item">
+          <div class="schedule-time">10:00<br><span>〜11:30</span></div>
+          <div class="schedule-info">
+            <div>
+              <div class="schedule-name">山田 花子 様</div>
+              <div class="schedule-detail">姿勢改善 / 初回カウンセリング</div>
+            </div>
+            <button class="btn-karte" onclick="alert('山田様のカルテを開きます')">カルテを開く</button>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">14:00<br><span>〜15:30</span></div>
+          <div class="schedule-info">
+            <div>
+              <div class="schedule-name">佐藤 美咲 様</div>
+              <div class="schedule-detail">骨盤調整・メンテナンス</div>
+            </div>
+            <button class="btn-karte">カルテを開く</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 今週のビュー -->
+    <div id="tab-week" class="tab-content">
+      <div class="schedule-list">
+        <!-- 今日 -->
+        <div class="schedule-item" style="border-left: 4px solid var(--primary);">
+          <div class="schedule-time" style="background: white;">9/30<br><span>(水)</span></div>
+          <div class="schedule-info">
+            <div>
+              <div class="schedule-name">本日：予約2件</div>
+              <div class="schedule-detail">10:00 山田様 / 14:00 佐藤様</div>
+            </div>
+            <button class="btn-karte" onclick="switchTab('day')">詳細を見る</button>
+          </div>
+        </div>
+        <!-- 明日以降 -->
+        <div class="schedule-item">
+          <div class="schedule-time" style="background: white;">10/1<br><span>(木)</span></div>
+          <div class="schedule-info">
+            <div><div class="schedule-name">予約1件</div><div class="schedule-detail">11:00 鈴木様</div></div>
+            <button class="btn-karte">日別表示</button>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time" style="background: white;">10/2<br><span>(金)</span></div>
+          <div class="schedule-info">
+            <div style="color: var(--text-light);">予約なし</div>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time" style="background: white; color: var(--accent);">10/3<br><span>(土)</span></div>
+          <div class="schedule-info">
+            <div><div class="schedule-name">予約3件 (満枠)</div><div class="schedule-detail">10:00 田中様 / 13:00 伊藤様 / 16:00 高橋様</div></div>
+            <button class="btn-karte">日別表示</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 今月のビュー (カレンダー形式) -->
+    <div id="tab-month" class="tab-content">
+      <div class="calendar-header">
+        <button class="btn-small" style="padding: 4px 12px; border:none; border-radius:4px;">◀ 先月</button>
+        <span>2026年 10月</span>
+        <button class="btn-small" style="padding: 4px 12px; border:none; border-radius:4px;">来月 ▶</button>
+      </div>
+      
+      <!-- カレンダーグリッド -->
+      <div class="calendar-grid">
+        <div class="day-name" style="color: #e74c3c;">日</div>
+        <div class="day-name">月</div>
+        <div class="day-name">火</div>
+        <div class="day-name">水</div>
+        <div class="day-name">木</div>
+        <div class="day-name">金</div>
+        <div class="day-name" style="color: #3498db;">土</div>
+        
+        <!-- 空白セル -->
+        <div class="day-cell empty"></div><div class="day-cell empty"></div>
+        <div class="day-cell empty"></div><div class="day-cell empty"></div>
+        
+        <!-- 1日〜 -->
+        <div class="day-cell" onclick="switchTab('day')">1<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">2</div>
+        <div class="day-cell">3<div class="reservation-dots"><div class="dot full"></div><div class="dot full"></div><div class="dot full"></div></div></div>
+        <div class="day-cell">4</div>
+        <div class="day-cell">5<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">6<div class="reservation-dots"><div class="dot"></div><div class="dot"></div></div></div>
+        <div class="day-cell">7</div>
+        <div class="day-cell">8<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">9</div>
+        <div class="day-cell">10<div class="reservation-dots"><div class="dot"></div><div class="dot"></div></div></div>
+        <div class="day-cell">11</div>
+        <div class="day-cell">12</div>
+        <div class="day-cell">13<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">14</div>
+        <div class="day-cell">15<div class="reservation-dots"><div class="dot"></div><div class="dot"></div></div></div>
+        <div class="day-cell today">16<div style="font-size:10px;">今日</div></div> <!-- デモ用今日 -->
+        <div class="day-cell">17<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">18</div>
+        <div class="day-cell">19</div>
+        <div class="day-cell">20<div class="reservation-dots"><div class="dot full"></div><div class="dot full"></div></div></div>
+        <div class="day-cell">21</div>
+        <div class="day-cell">22</div>
+        <div class="day-cell">23</div>
+        <div class="day-cell">24<div class="reservation-dots"><div class="dot"></div><div class="dot"></div></div></div>
+        <div class="day-cell">25</div>
+        <div class="day-cell">26</div>
+        <div class="day-cell">27</div>
+        <div class="day-cell">28</div>
+        <div class="day-cell">29<div class="reservation-dots"><div class="dot"></div></div></div>
+        <div class="day-cell">30</div>
+        <div class="day-cell">31<div class="reservation-dots"><div class="dot"></div><div class="dot"></div></div></div>
+      </div>
+      <div style="margin-top: 12px; font-size: 0.85em; color: var(--text-light); text-align: right;">
+        ※日付をタップするとその日の予約詳細（日別）を表示します。
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================
+       利用数・売上・検索・クイックアクション
+       =============================== -->
   <div class="card">
     <div class="card-title">利用数・売上レポート</div>
-    <div class="date-filter">
-      <input type="date" value="2026-09-01"> 〜 <input type="date" value="2026-09-30">
-      <button class="btn btn-secondary" style="padding: 10px 16px; font-size: 14px;">集計する</button>
+    <div style="display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;">
+      <input type="date" value="2026-09-01" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px;"> 〜 
+      <input type="date" value="2026-09-30" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px;">
+      <button class="btn-primary" style="padding: 8px 16px; border:none; border-radius:6px; cursor: pointer;">集計</button>
     </div>
     <div class="dashboard-grid">
       <div class="stat-box">
@@ -72,26 +249,50 @@
     </div>
   </div>
 
-  <!-- 患者検索 -->
   <div class="card">
     <div class="card-title">お客様検索</div>
     <div class="search-wrapper">
       <input type="text" class="search-input" placeholder="名前・フリガナ・電話番号で検索...">
-      <button class="btn btn-primary" style="white-space: nowrap; margin: 0;" onclick="alert('検索結果一覧画面へ遷移します')">検索する</button>
+      <button class="btn btn-primary" style="white-space: nowrap; margin: 0; padding: 0 24px;" onclick="alert('検索結果画面へ')">検索する</button>
     </div>
   </div>
 
-  <!-- クイックアクション -->
   <div class="action-grid">
-    <button class="btn btn-primary" onclick="alert('新規登録画面（空のカルテ画面）へ遷移します')">
+    <button class="btn btn-primary" onclick="alert('新規お客様のカルテ作成画面を開きます')">
       ＋ 新規お客様登録
     </button>
-    <button class="btn btn-secondary" onclick="alert('プラン一覧・料金設定の管理画面へ遷移します')">
+    <button class="btn btn-secondary" onclick="alert('プラン一覧・料金設定の管理画面を開きます')">
       📋 プラン説明・管理
     </button>
   </div>
 
 </div>
+
+<script>
+  // スケジュールタブ切り替え用スクリプト
+  function switchTab(tabId) {
+    // ボタンのアクティブ状態をリセット
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // コンテンツのアクティブ状態をリセット
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+    
+    // クリックされたタブをアクティブにする
+    // 例: event.target または onClick経由で特定
+    if(event && event.currentTarget) {
+      event.currentTarget.classList.add('active');
+    } else {
+      // 日付クリック等から呼び出された場合は強制的にタブボタンをアクティブ化
+      if(tabId === 'day') buttons[0].classList.add('active');
+      if(tabId === 'week') buttons[1].classList.add('active');
+      if(tabId === 'month') buttons[2].classList.add('active');
+    }
+    
+    document.getElementById('tab-' + tabId).classList.add('active');
+  }
+</script>
 
 </body>
 </html>
